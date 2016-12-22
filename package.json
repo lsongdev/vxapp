@@ -1,0 +1,25 @@
+{
+  "name": "vxapp",
+  "version": "1.1.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel --presets es2015,stage-0 src/index.js --out-dir lib/"
+  },
+  "bin":{
+    "vxapp": "./bin/vxapp.js"
+  },
+  "repository": {
+    "url": "git@github.com:song940/vxapp.git",
+    "type": "git"
+  },
+  "author": "Lsong <song940@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-register": "^6.18.0"
+  }
+}
