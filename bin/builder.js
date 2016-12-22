@@ -39,6 +39,7 @@ function wxml(filename){
   const html = filename.replace(/\.js$/, '.html');
   const wxml = filename.replace(/\.js$/, '.wxml');
   const to = wxml.replace(src, out);
+  mkdir.sync(path.dirname(to));
   fs.createReadStream(html).pipe(fs.createWriteStream(to));
 }
 
