@@ -1,12 +1,4 @@
 exports.App = class App {
-  static config = {
-   window:{
-      backgroundTextStyle: "light",
-      navigationBarBackgroundColor: "#fff",
-      navigationBarTitleText: "WeChat",
-      navigationBarTextStyle: "black"
-    }
-  }
   /**
    * request
    */
