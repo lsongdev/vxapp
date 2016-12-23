@@ -4,10 +4,9 @@ exports.App = class App {
    */
   request(method, url, data, header) {
     var app = this;
-    var DOMAIN = 'https://wx.maoyan.com';
     if (typeof method === 'object') {
-      url = method.url;
-      data = method.data;
+      url    = method.url;
+      data   = method.data;
       header = method.header;
       method = method.method;
     }
@@ -71,7 +70,6 @@ exports.App = class App {
             req.header['content-type'] =  'multipart/form-data'
           }
         }
-        req.url = DOMAIN + req.url;
         req.timestamp = +new Date;
         req.complete = function(res) {
           var error = null;
