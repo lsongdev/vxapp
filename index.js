@@ -101,7 +101,10 @@ exports.App = class App {
 
 exports.Page = class Page {
   setData(data){
-    return this.$ctx.setData(data);
+    for(var k in data){
+      this.data[ k ] = data[ k ];
+    }
+    return this.$ctx.setData(this.data);
   }
   onLoad(){
     console.log('xxx');
