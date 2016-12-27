@@ -119,6 +119,7 @@ exports.Page = class Page {
       var fetchKey = this.data.fetchKey || 'list';
       this.onFetch(fetchIndex, fetchSize).then(list => {
         var data = {};
+        data['fetchMore'] = true;
         data[ fetchKey ] = list;
         this.setData(data);
         wx.stopPullDownRefresh();
@@ -131,7 +132,8 @@ exports.Page = class Page {
       var fetchIndex = this.data.fetchIndex || 0;
       var fetchSize = this.data.fetchSize || 20;
       var fetchKey = this.data.fetchKey || 'list';
-      if(typeof this.data.fetchMore !== 'undefined' && !this.data.fetchMore){
+      var fetchMore = this.data.fetchMore;
+      if(typeof fetchMore !== 'undefined' && !fetchMore){
         return;
       }
       this.onFetch(++fetchIndex, fetchSize).then(list => {
