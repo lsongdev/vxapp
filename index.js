@@ -108,7 +108,38 @@ exports.Page = class Page {
     return this.$ctx.setData(this.data);
   }
   onLoad(){
-    console.log('xxx');
+    this.onPullDownRefresh();
+  }
+  onPullDownRefresh(){
+    if(typeof this.onFetch === 'function'){
+      this.data = this.data || {};
+      var fetchIndex = this.data.fetchIndex || 0;
+      var fetchSize = this.data.fetchSize || 20;
+      var fetchKey = this.data.fetchKey || 'list';
+      this.onFetch(fetchIndex, fetchSize).then(list => {
+        var data = {};
+        data[ fetchKey ] = list;
+        this.setData(data);
+        wx.stopPullDownRefresh();
+      });
+    }
+  }
+  onReachBottom(){
+    if(typeof this.onFetch === 'function'){
+      this.data = this.data || {};
+      var fetchIndex = this.data.fetchIndex || 0;
+      var fetchSize = this.data.fetchSize || 20;
+      var fetchKey = this.data.fetchKey || 'list';
+      this.onFetch(++fetchIndex, fetchSize).then(list => {
+        if(list.length){
+          var data = {};
+          list = this.data[ fetchKey ].concat(list);
+          data[ 'fetchIndex' ] = fetchIndex;
+          data[ fetchKey ] = list;
+          this.setData(data);
+        }
+      });
+    }
   }
 }
 
@@ -124,18 +155,16 @@ exports.$Run = function(Component, register){
     Ctor = Ctor.__proto__;
   }
   
-  var keywords = [ 'constructor', 'setData' ];
-  var methods = props.filter(function(prop){
-    return keywords.indexOf(prop) === -1 && typeof com[ prop ] === 'function';
-  });
-  
-  register(methods.reduce((item, method) => {
-    var fn = com[ method ];
-    item[ method ] = function(){
+  register(props.filter(function(prop){
+    var keywords = [ 'constructor', 'setData' ];
+    return keywords.indexOf(prop) === -1;
+  }).reduce((item, key) => {
+    var prop = com[ key ];
+    item[ key ] = typeof prop === 'function' ? (function(){
       com.$ctx = this;
-      if(method === 'onLoad') com.setData();
-      return fn.apply(com, arguments);
-    }
+      if(prop === 'onLoad') com.setData();
+      return prop.apply(com, arguments);
+    }) : prop;
     return item;
   }, {}));
   
