@@ -107,7 +107,8 @@ exports.Page = class Page {
     }
     return this.$ctx.setData(this.data);
   }
-  onLoad(){
+  onLoad(options){
+    this.setData({ options: options });
     this.onPullDownRefresh();
   }
   onPullDownRefresh(){
@@ -130,6 +131,9 @@ exports.Page = class Page {
       var fetchIndex = this.data.fetchIndex || 0;
       var fetchSize = this.data.fetchSize || 20;
       var fetchKey = this.data.fetchKey || 'list';
+      if(typeof this.data.fetchMore !== 'undefined' && !this.data.fetchMore){
+        return;
+      }
       this.onFetch(++fetchIndex, fetchSize).then(list => {
         if(list.length){
           var data = {};
