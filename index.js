@@ -101,6 +101,7 @@ exports.App = class App {
 
 exports.Page = class Page {
   setData(data){
+    this.data = this.data || {};
     for(var k in data){
       this.data[ k ] = data[ k ];
     }
@@ -132,6 +133,7 @@ exports.$Run = function(Component, register){
     var fn = com[ method ];
     item[ method ] = function(){
       com.$ctx = this;
+      if(method === 'onLoad') com.setData();
       return fn.apply(com, arguments);
     }
     return item;
