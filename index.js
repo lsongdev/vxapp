@@ -17,12 +17,13 @@ exports.App = class App {
         'X-Requested-With': 'wxapp',
       },
       data: {},
-      query: {}
+      query: {},
+      options: {}
     },
     def = {
       config: function(name, value){
         if(arguments.length === 2) {
-          req.options = req.options || {};
+          req.options = req.options;
           req.options[ name ] = value;
         }
         else req.options = name;
