@@ -120,7 +120,6 @@ exports.Page = class Page {
       this.onFetch(fetchIndex, fetchSize).then(list => {
         var data = {};
         data[ fetchKey ] = list;
-        data['fetchMore'] = true;
         data['fetchIndex'] = fetchIndex;
         this.setData(data);
         wx.stopPullDownRefresh();
