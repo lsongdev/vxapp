@@ -79,8 +79,18 @@ exports.App = class App {
             body      : res.data,
             statusCode: parseInt(res.statusCode)
           };
+          wx.hideToast();
+          wx.hideNavigationBarLoading();
           callback && callback(error, response);
         };
+        if(req.options.loading){
+          wx.showNavigationBarLoading();
+          wx.showToast({
+            title: '加载中...',
+            icon: ' loading',
+            duration: 10000
+          })
+        }
         wx.request(req);
         return p;
       }
@@ -160,7 +170,7 @@ exports.$Run = function(Component, register){
     }
     Ctor = Ctor.__proto__;
   }
-  
+
   register(props.filter(function(prop){
     var keywords = [ 'constructor', 'setData' ];
     return keywords.indexOf(prop) === -1;
@@ -173,5 +183,5 @@ exports.$Run = function(Component, register){
     }) : prop;
     return item;
   }, {}));
-  
+
 }
