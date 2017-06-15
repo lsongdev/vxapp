@@ -5,16 +5,25 @@
 ### Installation
 
 ```bash
-$ npm install vxapp
+$ npm install -g vxapp
 ```
 
-### Example
+```bash
+➜ vxapp
 
-```js
-const vxapp = require('vxapp');
+  Usage: vxapp [options] [command]
 
-// your code here
 
+  Commands:
+
+    new <project_name>  create project
+    init                init exists project
+    build               build source code
+
+  Options:
+
+    -h, --help   output usage information
+    -w, --watch  watching files change
 ```
 
 ### Contributing

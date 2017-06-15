@@ -13,15 +13,81 @@ const glob    = require('glob');
 const mkdir   = require('mkdirp');
 const babel   = require('babel-core');
 const postcss = require('postcss');
+const dedent  = require('dedent-js');
+const program = require('commander');
 
 const cwd = process.cwd();
 const src = path.join(cwd, 'src');
 const out = path.join(cwd, 'build');
+const noop = x => x;
 
 mkdir.sync(src);
 mkdir.sync(out);
 
-const noop = x => x;
+program
+.option('-w, --watch', 'watching files change');
+
+program
+.command('new <project_name>')
+.description('create project')
+.action(name => {
+  name = path.join(cwd, name);
+  console.log('> cd', name);
+  mkdir(name);
+  init(name);
+})
+
+program
+.command('init')
+.description('init exists project')
+.action(x => init(cwd));
+
+program
+.command('build')
+.description('build source code')
+.action(x => run())
+
+program
+.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}
+
+function init(dir){
+  dir = dir || cwd;
+  mkdir(path.join(dir, 'src/pages/index'));
+
+  // app.js
+  fs.writeFile(path.join(dir, 'src/app.js'), dedent`
+  import $ from 'vxapp';
+
+  export default class extends $.App {
+    // your code here
+  }`, noop);
+
+  // app.css
+  fs.writeFile(path.join(dir, 'src/app.css'), dedent`
+    /* global stylesheets here */
+  `, noop);
+
+  // pages/index/index.js
+  fs.writeFile(path.join(dir, 'src/pages/index/index.js'), dedent`
+  import $ from 'vxapp';
+
+  export default class Index extends $.Page {
+    onLoad(){
+      this.setData({ name: 'vxapp' });
+    }
+  }`, noop);
+  // pages/index/index.html
+  fs.writeFile(path.join(dir, 'src/pages/index/index.html'), dedent`
+    <view>hello {{name}}</view>
+  `, noop);
+
+  console.log('> npm i vxapp --save; vxapp build');
+}
+
 
 function wxss(filename){
   const css = filename.replace(/\.js$/, '.css');
@@ -133,6 +199,6 @@ function run(){
   });
 }
 
-run();
-
-fs.watch(src, { recursive: true }, run);
+if(program.watch){
+  fs.watch(src, { recursive: true }, run);  
+}
