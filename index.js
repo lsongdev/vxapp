@@ -14,7 +14,7 @@ exports.App = class App {
       method: method,
       url: url,
       header: {
-        'X-Requested-With': 'wxapp',
+        'X-Requested-With': 'wxapp'
       },
       data: {},
       query: {},

@@ -2,10 +2,7 @@
   "name": "vxapp",
   "version": "1.2.0",
   "main": "index.js",
-  "scripts": {
-    "build": "babel --presets es2015,stage-0 src/index.js --out-dir lib/"
-  },
-  "bin":{
+  "bin": {
     "vxapp": "./bin/vxapp.js"
   },
   "repository": {
@@ -19,6 +16,10 @@
     "babel-core": "^6.21.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-stage-0": "^6.16.0",
-    "babel-register": "^6.18.0"
+    "babel-register": "^6.18.0",
+    "postcss": "^6.0.2",
+    "postcss-advanced-variables": "^1.2.2",
+    "postcss-nested": "^2.0.2",
+    "postcss-partial-import": "^4.1.0"
   }
 }
