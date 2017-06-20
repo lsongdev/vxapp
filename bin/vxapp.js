@@ -183,7 +183,8 @@ function transform(filename, type, to){
 }
 
 function run(){
-  ncp(path.join(src, 'images'), out);
+  const img = path.join(src, 'images');
+  ncp(img, img.replace(src, out));
   const app = path.join(src, 'app.js');
   glob(src + '/pages/**/*.js', (err, files) => {
     var pages = files.map(filename => {
