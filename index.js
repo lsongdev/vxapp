@@ -1,4 +1,113 @@
+const META_DATA = '_';
+
 exports.App = class App {
+  /**
+   * 将微信小程序风格的函数调用转换成 Promise 风格
+   */
+  wx2promise(fn, params) {
+    params = params || {};
+    return new Promise((accept, reject) => {
+      params.success = accept;
+      params.fail = reject;
+      fn(params);
+    });
+  }
+
+  toast(message, duration, type){
+    type = type || 'loading';
+    duration = duration || 2000;
+    wx.showToast({ title: message, icon: type, duration });
+    return this;
+  }
+
+  set(key, value, options){
+    var meta = this.get(META_DATA) || {};
+    options = options || {};
+    if(key === null){
+      wx.clearStorage();
+      return this;
+    }
+    if(value === null){
+      meta[ key ] = undefined;
+      delete meta[ key ];
+      wx.removeStorageSync(key);
+      wx.setStorageSync(META_DATA, meta);
+      return this;
+    }
+    options.timestamp = +new Date;
+    meta[ key ] = options;
+    wx.setStorageSync(key, value);
+    wx.setStorageSync(META_DATA, meta);
+    return this;
+  }
+
+  get(key){
+    var meta = wx.getStorageSync(META_DATA) || {};
+    if(typeof key === 'string'){
+      var options = meta[ key ] || {};
+      if(options.expires && +new Date - options.timestamp > options.expires){
+        // expired
+        return null;
+      }
+      return wx.getStorageSync(key);
+    }
+    return Object.keys(meta).reduce(function(item, key){
+      item[ key ] = this.get(key);
+      return item;
+    }, {});
+  }
+
+  /**
+   * [storage description]
+   * @param  {[type]} key   [description]
+   * @param  {[type]} value [description]
+   * @return {[type]}       [description]
+   */
+  storage(key, value) {
+    if (arguments.length === 2) {
+      return this.set(key, value);
+    } else {
+      return this.get(key);
+    }
+  }
+
+  /**
+   * 设置页面标题
+   */
+  title(title){
+    wx.setNavigationBarTitle({ title });
+  }
+  /**
+   * 获取页面堆栈信息
+   */
+  pages(index){
+    var pages = getCurrentPages();
+    if(typeof index !== 'undefined'){
+      if(index > 0){
+        return pages[index];
+      }else{
+        return pages[ pages.length + index ];
+      }
+    }
+    return pages;
+  }
+  /**
+   * goto
+   */
+  goto(page){
+    var app = this;
+    var pages = app.pages();
+    if(typeof page === 'string'){
+      if(pages.length < 5){
+        wx.navigateTo({ url: page });
+      }else{
+        wx.redirectTo({ url: page });
+      }
+    }else{
+      wx.navigateBack({ delta: page });
+    }
+
+  }
   /**
    * request
    */
