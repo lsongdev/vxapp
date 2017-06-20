@@ -6,9 +6,7 @@ const babelOptions = {
   ]
 };
 require('babel-register')(babelOptions);
-require('upkg/updater')(
-  require('../package')
-);
+
 const fs 	    = require('fs');
 const ncp     = require('ncp');
 const path    = require('path');
@@ -18,6 +16,9 @@ const babel   = require('babel-core');
 const postcss = require('postcss');
 const dedent  = require('dedent-js');
 const program = require('commander');
+const pkg     = require('../package');
+
+require('upkg/updater')(pkg);
 
 const cwd = process.cwd();
 const src = path.join(cwd, 'src');
@@ -26,9 +27,6 @@ const noop = x => x;
 
 mkdir.sync(src);
 mkdir.sync(out);
-
-program
-.option('-w, --watch', 'watching files change');
 
 program
 .command('new <project_name>')
@@ -51,6 +49,8 @@ program
 .action(x => run())
 
 program
+.version(pkg.version)
+.option('-w, --watch', 'watching files change')
 .parse(process.argv);
 
 if (!process.argv.slice(2).length) {
@@ -184,14 +184,18 @@ function transform(filename, type, to){
   });
 }
 
-function run(){
+function copy(){
   const img = path.join(src, 'images');
   ncp(img, img.replace(src, out));
+}
+
+function run(){
   const app = path.join(src, 'app.js');
   glob(src + '/pages/**/*.js', (err, files) => {
     var pages = files.map(filename => {
       return filename.match(/(pages\/.*)\.js/)[1];
     });
+    copy();
     wxss(app);
     wxconfig(app, pages);
     transform(app, 'app');
