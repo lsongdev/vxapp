@@ -19,6 +19,7 @@
     "babel-register": "^6.18.0",
     "commander": "^2.9.0",
     "dedent-js": "^1.0.1",
+    "ncp": "^2.0.0",
     "postcss": "^6.0.2",
     "postcss-advanced-variables": "^1.2.2",
     "postcss-nested": "^2.0.2",

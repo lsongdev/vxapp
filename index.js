@@ -108,6 +108,25 @@ exports.App = class App {
     }
 
   }
+  
+  location(){
+    return this.wx2promise(wx.getLocation);
+  }
+
+  user(){
+    function fetchUser(userInfo){
+      console.log(userInfo);
+    }
+    return this.wx2promise(wx.login)
+    .then(res => res.code)
+    .then(code => {
+      return this.wx2promise(wx.getUserInfo)
+      .then(userInfo => {
+        userInfo.code = code;
+        return userInfo;
+      })
+    })
+  }
   /**
    * request
    */

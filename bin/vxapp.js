@@ -8,6 +8,7 @@ const babelOptions = {
 require('babel-register')(babelOptions);
 
 const fs 	    = require('fs');
+const ncp     = require('ncp');
 const path    = require('path');
 const glob    = require('glob');
 const mkdir   = require('mkdirp');
@@ -56,7 +57,7 @@ if (!process.argv.slice(2).length) {
 
 function init(dir){
   dir = dir || cwd;
-  mkdir(path.join(dir, 'src/pages/index'));
+  mkdir.sync(path.join(dir, 'src/pages/index'));
 
   // app.js
   fs.writeFile(path.join(dir, 'src/app.js'), dedent`
@@ -182,6 +183,7 @@ function transform(filename, type, to){
 }
 
 function run(){
+  ncp(path.join(src, 'images'), out);
   const app = path.join(src, 'app.js');
   glob(src + '/pages/**/*.js', (err, files) => {
     var pages = files.map(filename => {
