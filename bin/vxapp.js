@@ -6,7 +6,9 @@ const babelOptions = {
   ]
 };
 require('babel-register')(babelOptions);
-
+require('upkg/updater')(
+  require('../package')
+);
 const fs 	    = require('fs');
 const ncp     = require('ncp');
 const path    = require('path');

@@ -5,6 +5,9 @@
   "bin": {
     "vxapp": "./bin/vxapp.js"
   },
+  "updater": {
+    "level": "patch"
+  },
   "repository": {
     "url": "git@github.com:song940/vxapp.git",
     "type": "git"
@@ -23,6 +26,7 @@
     "postcss": "^6.0.2",
     "postcss-advanced-variables": "^1.2.2",
     "postcss-nested": "^2.0.2",
-    "postcss-partial-import": "^4.1.0"
+    "postcss-partial-import": "^4.1.0",
+    "upkg": "^1.0.3"
   }
 }
