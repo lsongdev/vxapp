@@ -7,7 +7,7 @@ const babelOptions = {
 };
 require('babel-register')(babelOptions);
 
-const fs 	    = require('fs');
+const fs      = require('fs');
 const ncp     = require('ncp');
 const path    = require('path');
 const glob    = require('glob');
@@ -209,5 +209,8 @@ function run(){
 }
 
 if(program.watch){
-  fs.watch(src, { recursive: true }, run);  
+   process.on('uncaughtException', function (err) {
+    console.error('uncaught exception:', err.message);
+  })
+  fs.watch(src, { recursive: true }, run);
 }
