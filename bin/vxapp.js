@@ -132,6 +132,7 @@ function wxconfig(filename, pages){
       config.pages = pages;
     }
     const json = filename.replace(/\.js$/, '.json').replace(src, out);
+    mkdir.sync(path.dirname(json));
     fs.writeFile(json, JSON.stringify(config), noop);
   }
 }
@@ -185,7 +186,7 @@ function run(){
 
   glob(src + '/pages/**/_*.*', (err, files) => {
     files.forEach(filename => {
-      ;({
+      ({
         html: wxml,
         css : wxss,
         js  : transform
@@ -199,7 +200,40 @@ if(program.watch){
    process.on('uncaughtException', function (err) {
     console.error('uncaught exception:', err.message);
   })
-  fs.watch(src, { recursive: true }, run);
+  fs.watch(src, { recursive: true }, (type, filename) => {
+    compile(path.join(src, filename));
+  });
+}
+
+
+function compile(filename){
+  var type = 'other';
+  const ext = filename.split('.').slice(-1)[0];
+  if(/app\.js$/.test(filename)) type = 'app';
+  if(/images/.test(filename)) type = 'image';
+  if(/pages\/((?!_).)*\.js$/.test(filename)) type = 'page';
+  switch(ext){
+    case 'js':
+      const pages = glob.sync(src + '/pages/**/!(_)*.js').map(filename => {
+        return filename.match(/(pages\/.*)\.js/)[1];
+      });
+      if(type == 'app'){
+        wxconfig(filename, pages);
+      }else{
+        wxconfig(filename);
+      }
+      transform(filename, type);
+      break;
+    case 'css':
+      wxss(filename);
+      break;
+    case 'html':
+      wxml(filename);
+      break;
+    case 'image':
+      copy();
+      break;
+  }
 }
 
 
