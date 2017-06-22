@@ -93,11 +93,12 @@ function init(dir){
 
 
 function wxss(filename){
-  const css = filename.replace(/\.js$/, '.css');
-  const to  = css.replace(src, out).replace(/\.css$/, '.wxss');
-  fs.readFile(css, (err, content) => {
+  const to = filename
+    .replace(src, out)
+    .replace(/\.css$/, '.wxss');
+  fs.readFile(filename, (err, content) => {
     if(err) return;
-    var paths = [
+    const paths = [
       path.dirname(filename),
       path.join(src, 'pages')
     ];
@@ -113,11 +114,12 @@ function wxss(filename){
   })
 }
 
-function wxml(filename){
-  const html = filename.replace(/\.js$/, '.html');
-  const wxml = filename.replace(/\.js$/, '.wxml').replace(src, out);
+function wxml(html){
+  const wxml = html
+    .replace(src, out)
+    .replace(/\.html$/, '.wxml')
   mkdir.sync(path.dirname(wxml));
-  fs.exists(html, (exists) => {
+  fs.exists(html, exists => {
     if(exists) fs.createReadStream(html).pipe(fs.createWriteStream(wxml));
   });
 }
@@ -132,32 +134,6 @@ function wxconfig(filename, pages){
     const json = filename.replace(/\.js$/, '.json').replace(src, out);
     fs.writeFile(json, JSON.stringify(config), noop);
   }
-}
-
-function findDeps(name, filename){
-  var mod  = path.join(cwd, 'node_modules', name);
-  var pkg  = require(path.join(mod, 'package.json'));
-  var main = path.join(mod, pkg.main);
-  var to   = path.join(out, 'scripts', name + '.js');
-  mkdir.sync(path.dirname(to));
-  transform(main, null, to);
-  filename = filename.replace(src, out);
-  return path.relative(path.dirname(filename), to);
-}
-
-function parseImport(code, filename){
-  return code.replace(/import\s*(.*)from\s*["'](.+)["']/g, (match, name, file) => {
-    var realPath = file;
-    if(file.startsWith('.')){
-      if(!file.endsWith('.js')) file += '.js';
-      var to = path.resolve(path.dirname(filename), file);
-      var from = to.replace(out, src);
-      transform(from, null, to);
-    }else{
-      realPath = findDeps(file, filename);
-    }
-    return match.replace(file, realPath);
-  });
 }
 
 function addImport(code, name, pkg){
@@ -176,7 +152,7 @@ function transform(filename, type, to){
       code = addRegister(code, type);
     }
     to = to || filename.replace(src, out);
-    code = parseImport(code, to);
+    babelOptions.plugins = [ parseImport(filename) ];
     var result = babel.transform(code, babelOptions);
     mkdir(path.dirname(to), err => {
       fs.writeFile(to, result.code, noop);
@@ -190,22 +166,33 @@ function copy(){
 }
 
 function run(){
-  const app = path.join(src, 'app.js');
-  glob(src + '/pages/**/*.js', (err, files) => {
-    var pages = files.map(filename => {
-      return filename.match(/(pages\/.*)\.js/)[1];
-    });
-    copy();
-    wxss(app);
-    wxconfig(app, pages);
-    transform(app, 'app');
+  const app = path.join(src, 'app');
+  const pages = glob.sync(src + '/pages/**/!(_)*.js').map(filename => {
+    return filename.match(/(pages\/.*)\.js/)[1];
+  });
+
+  copy();
+  wxss(app + '.css');
+  wxconfig(app + '.js', pages);
+  transform(app + '.js', 'app');
+  pages.forEach(page => {
+    const filename = path.join(src, page);
+    wxss(filename + '.css');
+    wxml(filename + '.html');
+    wxconfig(filename + '.js');
+    transform(filename + '.js', 'page');
+  });
+
+  glob(src + '/pages/**/_*.*', (err, files) => {
     files.forEach(filename => {
-      wxss(filename);
-      wxml(filename);
-      wxconfig(filename);
-      transform(filename, 'page');
+      ;({
+        html: wxml,
+        css : wxss,
+        js  : transform
+      })[ filename.split('.').slice(-1)[0] ](filename)
     });
   });
+
 }
 
 if(program.watch){
@@ -213,4 +200,51 @@ if(program.watch){
     console.error('uncaught exception:', err.message);
   })
   fs.watch(src, { recursive: true }, run);
+}
+
+
+function parseImport (current){
+  const resolve = name => {
+    try{
+      return require.resolve(name);
+    }catch(e){};
+  }
+  const replaceWithAlias = (name) => {
+    var filename = resolve(name);
+    if(!filename) filename = path.resolve(path.dirname(current), name);
+    var varname = path.basename(filename, '.js');
+    if(/node_modules/.test(filename)) {
+      varname = name;
+      const to = path.join(out, 'scripts', varname) + '.js';
+      mkdir.sync(path.dirname(filename));
+      transform(filename, null, to);
+      filename = to;
+    }
+    filename = filename.replace(src, out);
+    return path.relative(path.dirname(current.replace(src, out)), filename);
+  }
+  return {
+    visitor: {
+      CallExpression: function CallExpression(path) {
+        // require
+        var node = path.node;
+        if (node.callee.name === "require" && node.arguments.length === 1) {
+          var filepath = node.arguments[0].value;
+          if (!filepath) return;
+          node.arguments[0].value = replaceWithAlias(filepath);
+          return;
+        }
+        // require.resolve
+        var callee = node.callee;
+        if (!callee.object) return;
+        if (!callee.property) return;
+        if (node.arguments.length !== 1) return;
+        if (!node.arguments[0].value) return;
+
+        if (callee.object.name == 'require' && callee.property.name == 'resolve') {
+          node.arguments[0].value = replaceWithAlias(node.arguments[0].value);
+        }
+      }
+    }
+  };
 }
