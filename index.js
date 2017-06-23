@@ -16,8 +16,22 @@ exports.App = class App {
   toast(message, duration, type){
     type = type || 'loading';
     duration = duration || 2000;
-    wx.showToast({ title: message, icon: type, duration });
-    return this;
+    return this.wx2promise(wx.showToast, { 
+      duration,
+      icon: type,
+      title: message,
+    });
+  }
+
+  dialog(title, content, options){
+    options = options || {};
+    options.title = title;
+    options.content = content;
+    return this.wx2promise(wx.showModal, options);
+  }
+
+  menu(itemList){
+    return this.wx2promise(wx.showActionSheet, { itemList });
   }
 
   set(key, value, options){

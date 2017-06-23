@@ -57,41 +57,6 @@ if (!process.argv.slice(2).length) {
   program.outputHelp();
 }
 
-function init(dir){
-  dir = dir || cwd;
-  mkdir.sync(path.join(dir, 'src/pages/index'));
-
-  // app.js
-  fs.writeFile(path.join(dir, 'src/app.js'), dedent`
-  import $ from 'vxapp';
-
-  export default class extends $.App {
-    // your code here
-  }`, noop);
-
-  // app.css
-  fs.writeFile(path.join(dir, 'src/app.css'), dedent`
-    /* global stylesheets here */
-  `, noop);
-
-  // pages/index/index.js
-  fs.writeFile(path.join(dir, 'src/pages/index/index.js'), dedent`
-  import $ from 'vxapp';
-
-  export default class Index extends $.Page {
-    onLoad(){
-      this.setData({ name: 'vxapp' });
-    }
-  }`, noop);
-  // pages/index/index.html
-  fs.writeFile(path.join(dir, 'src/pages/index/index.html'), dedent`
-    <view>hello {{name}}</view>
-  `, noop);
-
-  console.log('> npm i vxapp --save; vxapp build');
-}
-
-
 function wxss(filename){
   const to = filename
     .replace(src, out)
@@ -126,15 +91,16 @@ function wxml(html){
 
 function wxconfig(filename, pages){
   const Page = require(filename)[ 'default' ];
-  if(Page){
-    const config = Page.config || {}; 
-    if(typeof pages === 'object'){
-      config.pages = pages;
-    }
-    const json = filename.replace(/\.js$/, '.json').replace(src, out);
-    mkdir.sync(path.dirname(json));
-    fs.writeFile(json, JSON.stringify(config), noop);
-  }
+  if(!Page) return;
+  var { config } = Page; 
+  if(!config && !pages) return;
+  config = config || {};
+  config.pages = pages;
+  const to = filename
+    .replace(src, out)
+    .replace(/\.js$/, '.json')
+  mkdir.sync(path.dirname(to));
+  fs.writeFile(to, JSON.stringify(config), noop);
 }
 
 function addImport(code, name, pkg){
@@ -161,54 +127,11 @@ function transform(filename, type, to){
   });
 }
 
-function copy(){
-  const img = path.join(src, 'images');
-  ncp(img, img.replace(src, out));
+function find(dirs, handle){
+  return dirs.map(dir => glob.sync(dir)).reduce((a, b) => {
+    return [].concat.apply(a, b);
+  }, []);
 }
-
-function run(){
-  const app = path.join(src, 'app');
-  const pages = glob.sync(src + '/pages/**/!(_)*.js').map(filename => {
-    return filename.match(/(pages\/.*)\.js/)[1];
-  });
-
-  copy();
-  wxss(app + '.css');
-  wxconfig(app + '.js', pages);
-  transform(app + '.js', 'app');
-  pages.forEach(page => {
-    const filename = path.join(src, page);
-    wxss(filename + '.css');
-    wxml(filename + '.html');
-    wxconfig(filename + '.js');
-    transform(filename + '.js', 'page');
-  });
-
-  glob(src + '/pages/**/_*.*', (err, files) => {
-    files.forEach(filename => {
-      ({
-        html: wxml,
-        css : wxss,
-        js  : transform
-      })[ filename.split('.').slice(-1)[0] ](filename)
-    });
-  });
-
-  glob(src + '/scripts/**/*.js', (err, files) => {
-    files.forEach(x => transform(x, null, x.replace(src, out)));
-  });
-
-}
-
-if(program.watch){
-   process.on('uncaughtException', function (err) {
-    console.error('uncaught exception:', err.message);
-  })
-  fs.watch(src, { recursive: true }, (type, filename) => {
-    compile(path.join(src, filename));
-  });
-}
-
 
 function compile(filename){
   var type = 'other';
@@ -216,30 +139,46 @@ function compile(filename){
   if(/app\.js$/.test(filename)) type = 'app';
   if(/images/.test(filename)) type = 'image';
   if(/pages\/((?!_).)*\.js$/.test(filename)) type = 'page';
+  const pages = glob.sync(src + '/pages/**/!(_)*.js').map(filename => {
+    return filename.match(/(pages\/.*)\.js/)[1];
+  });
   switch(ext){
     case 'js':
-      const pages = glob.sync(src + '/pages/**/!(_)*.js').map(filename => {
-        return filename.match(/(pages\/.*)\.js/)[1];
-      });
-      if(type == 'app'){
-        wxconfig(filename, pages);
-      }else{
-        wxconfig(filename);
-      }
       transform(filename, type);
+      wxconfig(filename, type === 'app' && pages);
       break;
     case 'css':
-      wxss(filename);
+      wxss(path.join(src, 'app.css'));
+      pages.forEach(page => wxss(path.join(src, page) + '.css'));
       break;
     case 'html':
       wxml(filename);
       break;
-    case 'image':
-      copy();
+    default:
+      if(type == 'image'){
+        const to = filename.replace(src, out);
+        mkdir.sync(path.dirname(to));
+        fs.createReadStream(filename)
+        .pipe(fs.createWriteStream(to));
+      }
       break;
   }
 }
 
+function run(){
+
+  find([
+    src + '/app.js',
+    src + '/app.css',
+    src + '/pages/**/*.js',
+    src + '/pages/**/*.html',
+    src + '/pages/**/!(_)*.css',
+
+    src + '/images/**/*',
+    src + '/scripts/**/*.js'
+  ]).forEach(compile);
+
+}
 
 function parseImport (current){
   const resolve = name => {
@@ -285,4 +224,47 @@ function parseImport (current){
       }
     }
   };
+}
+
+function init(dir){
+  dir = dir || cwd;
+  mkdir.sync(path.join(dir, 'src/pages/index'));
+
+  // app.js
+  fs.writeFile(path.join(dir, 'src/app.js'), dedent`
+  import $ from 'vxapp';
+
+  export default class extends $.App {
+    // your code here
+  }`, noop);
+
+  // app.css
+  fs.writeFile(path.join(dir, 'src/app.css'), dedent`
+    /* global stylesheets here */
+  `, noop);
+
+  // pages/index/index.js
+  fs.writeFile(path.join(dir, 'src/pages/index/index.js'), dedent`
+  import $ from 'vxapp';
+
+  export default class Index extends $.Page {
+    onLoad(){
+      this.setData({ name: 'vxapp' });
+    }
+  }`, noop);
+  // pages/index/index.html
+  fs.writeFile(path.join(dir, 'src/pages/index/index.html'), dedent`
+    <view>hello {{name}}</view>
+  `, noop);
+
+  console.log('> npm i vxapp --save; vxapp build');
+}
+
+if(program.watch){
+   process.on('uncaughtException', function (err) {
+    console.error('uncaught exception:', err.message);
+  })
+  fs.watch(src, { recursive: true }, (type, filename) => {
+    compile(path.join(src, filename));
+  });
 }
