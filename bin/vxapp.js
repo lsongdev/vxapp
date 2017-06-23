@@ -194,6 +194,10 @@ function run(){
     });
   });
 
+  glob(src + '/scripts/**/*.js', (err, files) => {
+    files.forEach(x => transform(x, null, x.replace(src, out)));
+  });
+
 }
 
 if(program.watch){
