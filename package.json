@@ -28,6 +28,6 @@
     "postcss-advanced-variables": "^1.2.2",
     "postcss-nested": "^2.0.2",
     "postcss-partial-import": "^4.1.0",
-    "upkg": "^1.0.3"
+    "upkg": "latest"
   }
 }

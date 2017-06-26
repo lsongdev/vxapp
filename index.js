@@ -224,14 +224,14 @@ exports.App = class App {
         let p = new Promise(function(accept, reject) {
           if (!callback) {
             callback = function(err, res) {
-              if(typeof req.options.success === 'function'){
+              if(res && typeof req.options.success === 'function'){
                 try{
                   res = req.options.success(res);
                 }catch(e){
                   err = e;
                 }
               }
-              if(typeof req.options.error === 'function'){
+              if(err && typeof req.options.error === 'function'){
                 err = req.options.error(err);
               }
               if (err) return reject(err);
@@ -239,17 +239,6 @@ exports.App = class App {
             };
           }
         });
-        p.then(x => {
-          if(typeof req.options.success === 'function'){
-            x = req.options.success(x);
-          }
-          return x;
-        }).catch(e => {
-          if(typeof req.options.error === 'function'){
-            e = req.options.error(e);
-          } else console.error('vxapp#request', e);
-          return e;
-        })
         for (let name in req.query) {
           req.url += (~req.url.indexOf('?') ? '&' : '?') + [
             encodeURIComponent(name),
@@ -265,7 +254,7 @@ exports.App = class App {
         }
         req.timestamp = +new Date;
         req.complete = function(res) {
-          let error = null;
+          let error = res.error;
           let response = {
             request   : req,
             timestamp : +new Date,
