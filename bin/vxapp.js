@@ -89,16 +89,14 @@ function wxml(html){
   });
 }
 
-function wxconfig(filename, pages){
+function wxconfig(filename, files){
+  delete require.cache[ filename ];
   const Page = require(filename)[ 'default' ];
-  if(!Page) return;
-  var { config } = Page; 
-  if(!config && !pages) return;
-  config = config || {};
-  config.pages = pages;
-  const to = filename
-    .replace(src, out)
-    .replace(/\.js$/, '.json')
+  if(typeof Page === 'undefined' || !files) return;
+  const config = Object.assign({}, Page.config);
+  config.pages = [].concat.apply(config.pages, files)
+  config.pages = config.pages.filter((x, i) => config.pages.indexOf(x) === i);
+  const to = filename.replace(src, out).replace(/\.js$/, '.json')
   mkdir.sync(path.dirname(to));
   fs.writeFile(to, JSON.stringify(config), noop);
 }
