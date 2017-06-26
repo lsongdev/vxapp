@@ -12,30 +12,51 @@ exports.App = class App {
       fn(params);
     });
   }
-
+  /**
+   * [toast description]
+   * @param  {[type]} message  [description]
+   * @param  {[type]} duration [description]
+   * @param  {[type]} type     [description]
+   * @return {[type]}          [description]
+   */
   toast(message, duration, type){
     type = type || 'loading';
     duration = duration || 2000;
     return this.wx2promise(wx.showToast, { 
       duration,
       icon: type,
-      title: message,
+      title: message
     });
   }
-
+  /**
+   * [dialog description]
+   * @param  {[type]} title   [description]
+   * @param  {[type]} content [description]
+   * @param  {[type]} options [description]
+   * @return {[type]}         [description]
+   */
   dialog(title, content, options){
     options = options || {};
     options.title = title;
     options.content = content;
     return this.wx2promise(wx.showModal, options);
   }
-
+  /**
+   * [menu description]
+   * @param  {[type]} itemList [description]
+   * @return {[type]}          [description]
+   */
   menu(itemList){
     return this.wx2promise(wx.showActionSheet, { itemList });
   }
-
+  /**
+   * [set description]
+   * @param {[type]} key     [description]
+   * @param {[type]} value   [description]
+   * @param {[type]} options [description]
+   */
   set(key, value, options){
-    var meta = this.get(META_DATA) || {};
+    let meta = this.get(META_DATA) || {};
     options = options || {};
     if(key === null){
       wx.clearStorage();
@@ -54,11 +75,15 @@ exports.App = class App {
     wx.setStorageSync(META_DATA, meta);
     return this;
   }
-
+  /**
+   * [get description]
+   * @param  {[type]} key [description]
+   * @return {[type]}     [description]
+   */
   get(key){
-    var meta = wx.getStorageSync(META_DATA) || {};
+    let meta = wx.getStorageSync(META_DATA) || {};
     if(typeof key === 'string'){
-      var options = meta[ key ] || {};
+      let options = meta[ key ] || {};
       if(options.expires && +new Date - options.timestamp > options.expires){
         // expired
         return null;
@@ -95,7 +120,7 @@ exports.App = class App {
    * 获取页面堆栈信息
    */
   pages(index){
-    var pages = getCurrentPages();
+    let pages = getCurrentPages();
     if(typeof index !== 'undefined'){
       if(index > 0){
         return pages[index];
@@ -109,8 +134,8 @@ exports.App = class App {
    * goto
    */
   goto(page){
-    var app = this;
-    var pages = app.pages();
+    let app = this;
+    let pages = app.pages();
     if(typeof page === 'string'){
       if(pages.length < 5){
         wx.navigateTo({ url: page });
@@ -122,15 +147,18 @@ exports.App = class App {
     }
 
   }
-  
+  /**
+   * [location description]
+   * @return {[type]} [description]
+   */
   location(){
     return this.wx2promise(wx.getLocation);
   }
-
+  /**
+   * [user description]
+   * @return {[type]} [description]
+   */
   user(){
-    function fetchUser(userInfo){
-      console.log(userInfo);
-    }
     return this.wx2promise(wx.login)
     .then(res => res.code)
     .then(code => {
@@ -143,16 +171,21 @@ exports.App = class App {
   }
   /**
    * request
+   * @param  {[type]} method [description]
+   * @param  {[type]} url    [description]
+   * @param  {[type]} data   [description]
+   * @param  {[type]} header [description]
+   * @return {[type]}        [description]
    */
   request(method, url, data, header) {
-    var app = this;
+    let app = this;
     if (typeof method === 'object') {
       url    = method.url;
       data   = method.data;
       header = method.header;
       method = method.method;
     }
-    var req = {
+    let req = {
       method: method,
       url: url,
       header: {
@@ -164,10 +197,8 @@ exports.App = class App {
     },
     def = {
       config: function(name, value){
-        if(arguments.length === 2) {
-          req.options = req.options;
+        if(arguments.length === 2)
           req.options[ name ] = value;
-        }
         else req.options = name;
         return def;
       },
@@ -184,24 +215,43 @@ exports.App = class App {
         return def;
       },
       send: function(name, value) {
-        if (arguments.length === 2) {
+        if (arguments.length === 2)
           req.data[name] = value;
-        } else {
-          req.data = name;
-        }
+        else req.data = name;
         return def;
       },
       end: function(callback) {
-        var p = new Promise(function(accept, reject) {
+        let p = new Promise(function(accept, reject) {
           if (!callback) {
             callback = function(err, res) {
+              if(typeof req.options.success === 'function'){
+                try{
+                  res = req.options.success(res);
+                }catch(e){
+                  err = e;
+                }
+              }
+              if(typeof req.options.error === 'function'){
+                err = req.options.error(err);
+              }
               if (err) return reject(err);
-              else accept(res);
+              accept(res);
             };
           }
         });
-        for (var name in req.query) {
-          req.url += ((!!~req.url.indexOf('?')) ? '&' : '?') + [
+        p.then(x => {
+          if(typeof req.options.success === 'function'){
+            x = req.options.success(x);
+          }
+          return x;
+        }).catch(e => {
+          if(typeof req.options.error === 'function'){
+            e = req.options.error(e);
+          } else console.error('vxapp#request', e);
+          return e;
+        })
+        for (let name in req.query) {
+          req.url += (~req.url.indexOf('?') ? '&' : '?') + [
             encodeURIComponent(name),
             encodeURIComponent(req.query[name])
           ].join('=');
@@ -215,8 +265,8 @@ exports.App = class App {
         }
         req.timestamp = +new Date;
         req.complete = function(res) {
-          var error = null;
-          var response = {
+          let error = null;
+          let response = {
             request   : req,
             timestamp : +new Date,
             body      : res.data,
@@ -255,7 +305,7 @@ exports.App = class App {
 exports.Page = class Page {
   setData(data){
     this.data = this.data || {};
-    for(var k in data){
+    for(let k in data){
       this.data[ k ] = data[ k ];
     }
     return this.$ctx.setData(this.data);
@@ -267,11 +317,11 @@ exports.Page = class Page {
   onPullDownRefresh(){
     if(typeof this.onFetch === 'function'){
       this.data = this.data || {};
-      var fetchIndex = 0;
-      var fetchSize = this.data.fetchSize || 20;
-      var fetchKey = this.data.fetchKey || 'list';
+      let fetchIndex = 0;
+      let fetchSize = this.data.fetchSize || 20;
+      let fetchKey = this.data.fetchKey || 'list';
       this.onFetch(fetchIndex, fetchSize).then(list => {
-        var data = {};
+        let data = {};
         data[ fetchKey ] = list;
         data['fetchIndex'] = fetchIndex;
         this.setData(data);
@@ -282,16 +332,16 @@ exports.Page = class Page {
   onReachBottom(){
     if(typeof this.onFetch === 'function'){
       this.data = this.data || {};
-      var fetchIndex = this.data.fetchIndex || 0;
-      var fetchSize = this.data.fetchSize || 20;
-      var fetchKey = this.data.fetchKey || 'list';
-      var fetchMore = this.data.fetchMore;
+      let fetchIndex = this.data.fetchIndex || 0;
+      let fetchSize = this.data.fetchSize || 20;
+      let fetchKey = this.data.fetchKey || 'list';
+      let fetchMore = this.data.fetchMore;
       if(typeof fetchMore !== 'undefined' && !fetchMore){
         return;
       }
       this.onFetch(++fetchIndex, fetchSize).then(list => {
         if(list.length){
-          var data = {};
+          let data = {};
           list = this.data[ fetchKey ].concat(list);
           data[ 'fetchIndex' ] = fetchIndex;
           data[ fetchKey ] = list;
@@ -304,8 +354,8 @@ exports.Page = class Page {
 
 exports.$Run = function(Component, register){
   const com = new Component();
-  var props = [];
-  var Ctor = Component;
+  let props = [];
+  let Ctor = Component;
   while(true){
     props = [].concat.apply(props, Object.getOwnPropertyNames(Ctor.prototype));
     if(typeof Ctor.__proto__.prototype === 'undefined'){
@@ -315,10 +365,10 @@ exports.$Run = function(Component, register){
   }
 
   register(props.filter(function(prop){
-    var keywords = [ 'constructor', 'setData' ];
+    let keywords = [ 'constructor', 'setData' ];
     return keywords.indexOf(prop) === -1;
   }).reduce((item, key) => {
-    var prop = com[ key ];
+    let prop = com[ key ];
     item[ key ] = typeof prop === 'function' ? (function(){
       com.$ctx = this;
       if(prop === 'onLoad') com.setData();
