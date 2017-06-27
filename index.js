@@ -1,6 +1,53 @@
 const META_DATA = '_';
 
 exports.App = class App {
+
+  constructor() {
+    wx.onCompassChange(res => 
+      this.fire('CompassChange', res));
+
+    wx.onAccelerometerChange(res => 
+      this.fire('AccelerometerChange', res));
+
+    this.wx2promise(wx.startCompass).then(x => {});
+    this.wx2promise(wx.startAccelerometer).then(x => {});
+    return this;
+  }
+
+  system(){
+    return this.wx2promise(wx.getSystemInfo);
+  }
+
+  network(){
+    return this.wx2promise(wx.getNetworkType);
+  }
+
+  on(type, fn){
+    this.handlers = this.handlers || {};
+    this.handlers[ type ] = this.handlers[ type ] || [];
+    this.handlers[ type ].push(fn);
+    return this;
+  }
+
+  off(type, fn){
+    this.handlers = this.handlers || {};
+    if(typeof fn === 'function'){
+      const index = this.handlers[ type ].indexOf(fn);
+      this.handlers[ type ].splice(index, 1);
+    }else{
+      delete this.handlers[ type ];
+    }
+    return this;
+  }
+
+  fire(type){
+    this.handlers = this.handlers || {};
+    const args = [].slice.call(arguments, 1);
+    return (this.handlers[ type ] || []).map(fn => {
+      return fn.apply(this, args);
+    });
+  }
+
   /**
    * 将微信小程序风格的函数调用转换成 Promise 风格
    */
