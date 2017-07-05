@@ -13,6 +13,7 @@ const path    = require('path');
 const glob    = require('glob');
 const mkdir   = require('mkdirp');
 const babel   = require('babel-core');
+const parse5  = require('parse5');
 const postcss = require('postcss');
 const dedent  = require('dedent-js');
 const program = require('commander');
@@ -84,9 +85,20 @@ function wxml(html){
     .replace(src, out)
     .replace(/\.html$/, '.wxml')
   mkdir.sync(path.dirname(wxml));
-  fs.exists(html, exists => {
-    if(exists) fs.createReadStream(html).pipe(fs.createWriteStream(wxml));
-  });
+  const input = fs.readFileSync(html, 'utf8');
+  const document = parse5.parseFragment(input);
+  const firstChild = document.childNodes[0];
+  var output = fs.readFileSync(html, 'utf8');
+  if(firstChild.nodeName === 'layout'){
+    document.childNodes.splice(0, 1);
+    // attrs  = [ { name: 'href', value: 'default' }, 'disabled' ];
+    const href = firstChild.attrs.filter(attr => attr.name == 'href')[0];
+    const filename = path.join(src, 'layouts', href.value) + '.html';
+    const layout = fs.readFileSync(filename, 'utf8');
+    output = parse5.serialize(document);
+    output = layout.replace('__view__', output);
+  }
+  fs.writeFileSync(wxml, output);
 }
 
 function wxconfig(filename, files){
