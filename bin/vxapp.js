@@ -243,6 +243,18 @@ function init(dir){
   import $ from 'vxapp';
 
   export default class extends $.App {
+    static config = {
+      pages: [
+        "pages/index/index",
+      ],
+      window: {
+        navigationBarBackgroundColor: 'black',
+        navigationBarTextStyle: 'white',
+        navigationBarTitleText: 'vxapp',
+        backgroundColor: 'grey',
+        backgroundTextStyle: "#333"
+      }
+    }
     // your code here
   }`, noop);
 
