@@ -14,6 +14,10 @@ exports.App = class App {
     return this;
   }
 
+  initData() {
+    return Object.assign({}, this.globalData)
+  }
+
   system(){
     return this.wx2promise(wx.getSystemInfo);
   }
@@ -346,6 +350,9 @@ exports.Page = class Page {
     }
     return this.$ctx.setData(this.data);
   }
+  initData() {
+    return Object.assign({}, this.data)
+  }
   onLoad(options){
     this.setData({ options: options });
     this.onPullDownRefresh();
@@ -400,8 +407,8 @@ exports.$Run = function(Component, register){
     Ctor = Ctor.__proto__;
   }
 
-  register(props.filter(function(prop){
-    let keywords = [ 'constructor', 'setData' ];
+  const options = props.filter(function(prop){
+    let keywords = [ 'constructor', 'setData', 'initData' ];
     return keywords.indexOf(prop) === -1;
   }).reduce((item, key) => {
     let prop = com[ key ];
@@ -411,6 +418,8 @@ exports.$Run = function(Component, register){
       return prop.apply(com, arguments);
     }) : prop;
     return item;
-  }, {}));
+  }, {});
+  options.data = Object.assign({}, Object.assign(com.data || {}, com.initData()));
+  register(options);
 
 }
