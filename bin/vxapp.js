@@ -256,8 +256,8 @@ function init(dir){
   import $ from 'vxapp';
 
   export default class Index extends $.Page {
-    onLoad(){
-      this.setData({ name: 'vxapp' });
+    initData(){
+      return { name: 'vxapp' };
     }
   }`, noop);
   // pages/index/index.html
