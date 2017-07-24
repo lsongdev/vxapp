@@ -1,5 +1,5 @@
 {
-  "name": "vxapp",
+  "name": "@mtfe/vxapp",
   "version": "1.2.20",
   "main": "index.js",
   "bin": {
