@@ -205,6 +205,9 @@ function run(){
     src + '/scripts/**/*.js'
   ]).forEach(compile);
 
+  // merge all envs
+  mergeEnviroment(envs);
+
 }
 
 function parseImport (current){
@@ -253,6 +256,27 @@ function parseImport (current){
   };
 }
 
+function mergeEnviroment(names) {
+  // find out all env files
+  const envFiles = names.map(name => {
+    return glob.sync(`${conf}/${name}?(.env).js`)
+  }).reduce((a, b) => {
+    return [].concat.apply(a, b);
+  }, []);
+
+  const config = envFiles.reduce((a, b) => {
+    return Object.assign({}, a, require(b).default);
+  }, {});
+
+  const code = dedent`
+    export default ${JSON.stringify(config)}
+  `;
+
+  const result = babel.transform(code, babelOptions);
+
+  fs.writeFile(path.join(`${out}/config.js`), result.code, noop);
+}
+
 function init(dir){
   dir = dir || cwd;
   mkdir.sync(path.join(dir, 'src/pages/index'));
@@ -288,7 +312,7 @@ function init(dir){
 
   export default class Index extends $.Page {
     initData(){
-      return { name: 'vxapp' };
+      return { name: $.config.libName };
     }
   }`, noop);
   // pages/index/index.html
