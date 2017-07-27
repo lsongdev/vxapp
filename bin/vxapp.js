@@ -25,21 +25,17 @@ const src = path.join(cwd, 'src');
 const conf = path.join(cwd, 'config');
 const out = path.join(cwd, 'build');
 const noop = x => x;
-const envs = (function(e='development') {
+const envs = (function(e='dev') {
   let [first, ...rest] = [...new Set(e.split(',').filter(x => x !== 'default'))];
+  const internalEnvs = ['dev', 'prod'];
   rest = rest.filter(x => {
-    return ['development', 'production'].indexOf(x) === -1;
+    return internalEnvs.indexOf(x) === -1;
   });
 
-  newFirst = ({
-    development: 'dev',
-    production: 'prod'
-  })[first] || first;
-
-  if (newFirst === first) {
-    return ['default', 'dev', newFirst, ...rest];
+  if (internalEnvs.indexOf(first) === -1) {
+    return ['default', 'dev', first, ...rest];
   } else {
-    return ['default', newFirst, ...rest];
+    return ['default', first, ...rest];
   }
 })(process.env.NODE_ENV);
 
