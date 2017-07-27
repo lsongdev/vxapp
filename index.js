@@ -16,7 +16,7 @@ exports.App = class App {
 
     // load configuration
     const configPath = '../config';
-    exports.config = require(configPath).default;
+    exports.config = (x => x && x.__esModule ? x.default : x)(require(configPath));
     return this;
   }
 
