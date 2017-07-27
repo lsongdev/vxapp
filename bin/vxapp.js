@@ -264,8 +264,8 @@ function mergeEnvironment(names) {
     return [].concat.apply(a, b);
   }, []);
 
-  const config = envFiles.reduce((a, b) => {
-    return Object.assign({}, a, require(b).default);
+  const config = envFiles.reduce((config, filename) => {
+    return Object.assign({}, config, (x => x && x.__esModule ? x.default : x)(require(filename)));
   }, {});
 
   const code = dedent`
