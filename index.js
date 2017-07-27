@@ -1,5 +1,7 @@
 const META_DATA = '_';
 
+exports.config = {};
+
 exports.App = class App {
 
   constructor() {
@@ -11,6 +13,10 @@ exports.App = class App {
 
     this.wx2promise(wx.startCompass).then(x => {});
     this.wx2promise(wx.startAccelerometer).then(x => {});
+
+    // load configuration
+    const configPath = '../config';
+    exports.config = (x => x && x.__esModule ? x.default : x)(require(configPath));
     return this;
   }
 
