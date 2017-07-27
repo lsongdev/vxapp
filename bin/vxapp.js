@@ -274,7 +274,7 @@ function mergeEnvironment(names) {
 
   const result = babel.transform(code, babelOptions);
 
-  fs.writeFile(path.join(`${out}/config.js`), result.code, noop);
+  fs.writeFile(path.join(out, 'config.js'), result.code, noop);
 }
 
 function init(dir){
