@@ -4,7 +4,7 @@ import sinon from 'sinon'
 
 import { wx } from '../wx'
 import * as mp from '../mini-program'
-import { vxapp } from '../vxapp'
+import { vxapp, vxapp$run } from '../vxapp'
 
 global.wx = wx
 
@@ -12,8 +12,7 @@ describe('configuration', function() {
   it('should be an object by default', function() {
     class appForNoConfigTest extends vxapp.App {
     }
-    let dummy = {}
-    vxapp.$Run(appForNoConfigTest, mp.App(o => dummy = o))
+    let dummy = vxapp$run(appForNoConfigTest, mp.App)
     expect(dummy.data).to.be.a('object')
   })
 
@@ -25,8 +24,7 @@ describe('configuration', function() {
         }
       }
     }
-    let dummy = {}
-    vxapp.$Run(appForConfigTest, mp.App(o => dummy = o))
+    let dummy = vxapp$run(appForConfigTest, mp.App)
     expect(dummy.data).to.have.property('str').with.equal('This is a test string.')
   })
 })
