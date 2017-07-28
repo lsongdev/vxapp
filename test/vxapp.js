@@ -11,3 +11,9 @@ export const vxapp = proxyquire('../index', {
     ...dummyConfig
   }
 })
+
+export const vxapp$run = function(_class, reg) {
+  let ret
+  vxapp.$Run(_class, reg(o => ret = o))
+  return ret
+}
