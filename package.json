@@ -65,9 +65,10 @@
     "require": [
       "babel-register"
     ],
+    "report-dir": "./",
     "reporter": [
       "lcov",
-      "text"
+      "text-summary"
     ],
     "sourceMap": false,
     "instrument": false
