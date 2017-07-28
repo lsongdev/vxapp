@@ -3,3 +3,5 @@
 
 build/
 node_modules/
+.nyc_output/
+coverage/lcov-report

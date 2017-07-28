@@ -31,5 +31,45 @@
     "postcss-nested": "^2.0.2",
     "postcss-partial-import": "^4.1.0",
     "upkg": "latest"
+  },
+  "devDependencies": {
+    "babel-plugin-istanbul": "^4.1.4",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "chai": "^4.1.0",
+    "cross-env": "^5.0.1",
+    "mocha": "^3.4.2",
+    "nyc": "^11.0.3",
+    "proxyquire": "^1.8.0",
+    "sinon": "^2.4.1"
+  },
+  "scripts": {
+    "test": "cross-env NODE_ENV=test nyc mocha test/**/*.spec.js"
+  },
+  "babel": {
+    "presets": [
+      "stage-0",
+      "es2015"
+    ],
+    "plugins": [
+      ["transform-object-rest-spread", { "useBuiltIns": true }]
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
+  "nyc": {
+    "require": [
+      "babel-register"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "sourceMap": false,
+    "instrument": false
   }
 }
