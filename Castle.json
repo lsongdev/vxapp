@@ -1,3 +1,6 @@
 {
-  "auto_coverage": true
+  "auto_coverage": true,
+  "upload": {
+    "enable": true
+  }
 }
