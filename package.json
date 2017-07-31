@@ -60,17 +60,5 @@
         ]
       }
     }
-  },
-  "nyc": {
-    "require": [
-      "babel-register"
-    ],
-    "report-dir": "./",
-    "reporter": [
-      "lcov",
-      "text-summary"
-    ],
-    "sourceMap": false,
-    "instrument": false
   }
 }
