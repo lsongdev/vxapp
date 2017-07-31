@@ -63,6 +63,63 @@ describe('App', function() {
       })
     })
   })
+
+  describe('storage', function() {
+    const removeStorageSync = sinon.stub(wx, 'removeStorageSync')
+    const clearStorage = sinon.stub(wx, 'clearStorage')
+    const setStorageSync = sinon.stub(wx, 'setStorageSync')
+    const getStorageSync = sinon.stub(wx, 'getStorageSync')
+
+    describe('#set', function() {
+      const app = new appForTest
+
+      context('when called without key', function() {
+        it('should do nothing', function() {
+          app.set()
+          sinon.assert.notCalled(removeStorageSync)
+          sinon.assert.notCalled(clearStorage)
+        })
+      })
+
+      context('when called with key => null', function() {
+        it('should call clearStorage internally', function() {
+          app.set(null)
+          sinon.assert.called(clearStorage)
+        })
+      })
+
+      context('when called with key but without value', function() {
+        it('should call removeStorageSync internally', function() {
+          app.set('test')
+          sinon.assert.calledWith(removeStorageSync, 'test')
+        })
+      })
+
+      context('when called with key and value', function() {
+        it('should call setStorageSync internally with k-v pair', function() {
+          const params = ['test', 'this is a test string.']
+          app.set(...params)
+          sinon.assert.calledWith(setStorageSync, ...params)
+        })
+      })
+      
+    })
+
+    describe('#get', function() {
+      const app = new appForTest
+      const params = ['test', { str: 'this is a string.' }]
+      app.set(...params)
+
+      context('when called with key', function() {
+        it('should return value corresponded to the key', function() {
+          const val = app.get(params[0])
+          expect(val).to.deep.equal(params[1])
+        })
+      })
+
+      context('when called without key', function() {})
+    })
+    
   })
   
 })

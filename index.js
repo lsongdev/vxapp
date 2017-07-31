@@ -115,11 +115,12 @@ exports.App = class App {
   set(key, value, options){
     let meta = this.get(META_DATA) || {};
     options = options || {};
+    if(key === undefined) return this;
     if(key === null){
       wx.clearStorage();
       return this;
     }
-    if(value === null){
+    if(value === undefined){
       meta[ key ] = undefined;
       delete meta[ key ];
       wx.removeStorageSync(key);
