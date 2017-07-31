@@ -172,6 +172,32 @@ describe('App', function() {
         })
       })
     })
+
+    describe('#storage', function() {
+      
+      context('when called with two arguments', function() {
+        it('should set value with key', function() {
+          const params = ['test', 'this is a test string.']
+          sandbox.stub(wx, 'setStorageSync')
+
+          app.storage(...params)
+
+          sinon.assert.calledWith(wx.setStorageSync, ...params)
+        })
+      })
+
+      context('when called not with two arguments', function() {
+        it('should get value with parameter as key', function() {
+          const params = ['test', 'this is a string.']
+          sandbox.stub(wx, 'getStorageSync').withArgs(params[0]).returns(params[1])
+
+          const val = app.storage(params[0])
+          
+          expect(val).to.deep.equal(params[1])
+        })
+      })
+      
+    })
     
   })
   
