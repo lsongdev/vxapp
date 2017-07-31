@@ -139,6 +139,7 @@ exports.App = class App {
    */
   get(key){
     let meta = wx.getStorageSync(META_DATA) || {};
+    let self = this;
     if(typeof key === 'string'){
       let options = meta[ key ] || {};
       if(options.expires && +new Date - options.timestamp > options.expires){
@@ -148,7 +149,7 @@ exports.App = class App {
       return wx.getStorageSync(key);
     }
     return Object.keys(meta).reduce(function(item, key){
-      item[ key ] = this.get(key);
+      item[ key ] = self.get(key);
       return item;
     }, {});
   }
