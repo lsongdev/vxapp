@@ -10,12 +10,11 @@ global.wx = wx
 
 describe('App', function() {
   class appForTest extends vxapp.App {}
-  let dummy
 
   describe('event', function() {
     let cb1 = sinon.spy()
     let cb2 = sinon.spy()
-    dummy = new appForTest
+    let dummy = new appForTest
 
     describe('#on', function() {
 
@@ -70,18 +69,20 @@ describe('App', function() {
   })
 
   describe('storage', function() {
+    let app
+    let sandbox
+
+    beforeEach(function() {
+      app = new appForTest
+      sandbox = sinon.sandbox.create()
+    })
+
+    afterEach(function() {
+      app = null
+      sandbox.restore()
+    })
 
     describe('#set', function() {
-      const app = new appForTest
-      let sandbox
-
-      beforeEach(function() {
-        sandbox = sinon.sandbox.create()
-      })
-
-      afterEach(function() {
-        sandbox.restore()
-      })
 
       context('when called without key', function() {
         it('should do nothing', function() {
@@ -129,16 +130,6 @@ describe('App', function() {
     })
 
     describe('#get', function() {
-      const app = new appForTest
-      let sandbox
-
-      beforeEach(function() {
-        sandbox = sinon.sandbox.create()
-      })
-
-      afterEach(function() {
-        sandbox.restore()
-      })
 
       context('when called with key', function() {
         it('should return value corresponded to the key', function() {
