@@ -3,13 +3,60 @@ import { expect, assert, should } from 'chai'
 import sinon from 'sinon'
 
 import { wx } from '../wx'
-import * as mp from '../mini-program'
 import { vxapp, vxapp$run } from '../vxapp'
 
 global.wx = wx
 
 describe('App', function() {
   class appForTest extends vxapp.App {}
+
+  describe('wx2promise', function() {
+    let app = new appForTest
+    const ret = {
+      name: 'wechat'
+    }
+    function fakeNative(b) {
+      const fn = sinon.stub()
+      if (b) {
+        return fn.yieldsTo('success', ret)
+      } else {
+        return fn.yieldsTo('fail', 'hmm?')
+      }
+    }
+    
+    context('when resolved', function() {
+      it('should call resolve function', async function() {
+        const resultPromise = new Promise((res, rej) => {
+          return app.wx2promise(fakeNative(true))
+          .then(res)
+          .catch(rej)
+        })
+
+        try {
+          const result = await resultPromise
+          expect(result).to.deep.equal(ret)
+        } catch(err) {
+          throw new Error()
+        }
+      })
+    })
+
+    context('when rejected', function() {
+      it('should call reject function', async function() {
+        const resultPromise = new Promise((res, rej) => {
+          return app.wx2promise(fakeNative(false))
+          .then(res)
+          .catch(rej)
+        })
+
+        try {
+          const result = await resultPromise
+        } catch(err) {
+          expect(err).to.equal('hmm?')
+        }
+      })
+    })
+  })
 
   describe('event', function() {
     let cb1 = sinon.spy()
