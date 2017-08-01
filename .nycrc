@@ -1,6 +1,7 @@
 {
   "require": [
-    "babel-register"
+    "babel-register",
+    "babel-polyfill"
   ],
   "report-dir": "./",
   "reporter": [
