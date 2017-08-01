@@ -9,22 +9,45 @@ import { vxapp, vxapp$run } from '../vxapp'
 global.wx = wx
 
 describe('configuration', function() {
-  it('should be an object by default', function() {
-    class appForNoConfigTest extends vxapp.App {
-    }
-    let dummy = vxapp$run(appForNoConfigTest, mp.App)
-    expect(dummy.data).to.be.a('object')
-  })
+  describe('App', function() {
+    it('should be an object by default', function() {
+      class appForNoConfigTest extends vxapp.App {
+      }
+      let dummy = vxapp$run(appForNoConfigTest, mp.App)
+      expect(dummy.data).to.be.a('object')
+    })
 
-  it('should return data after customizing initData', function() {
-    class appForConfigTest extends vxapp.App {
-      initData() {
-        return {
-          str: 'This is a test string.'
+    it('should return data after customizing initData', function() {
+      class appForConfigTest extends vxapp.App {
+        initData() {
+          return {
+            str: 'This is a test string.'
+          }
         }
       }
-    }
-    let dummy = vxapp$run(appForConfigTest, mp.App)
-    expect(dummy.data).to.have.property('str').with.equal('This is a test string.')
+      let dummy = vxapp$run(appForConfigTest, mp.App)
+      expect(dummy.data).to.have.property('str').with.equal('This is a test string.')
+    })
+  })
+  
+  describe('Page', function() {
+    it('should be an object by default', function() {
+      class appForNoConfigTest extends vxapp.Page {
+      }
+      let dummy = vxapp$run(appForNoConfigTest, mp.Page)
+      expect(dummy.data).to.be.a('object')
+    })
+
+    it('should return data after customizing initData', function() {
+      class appForConfigTest extends vxapp.Page {
+        initData() {
+          return {
+            str: 'This is a test string.'
+          }
+        }
+      }
+      let dummy = vxapp$run(appForConfigTest, mp.Page)
+      expect(dummy.data).to.have.property('str').with.equal('This is a test string.')
+    })
   })
 })
