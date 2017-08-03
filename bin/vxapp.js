@@ -1,18 +1,30 @@
 #!/usr/bin/env node
 
 /**
-| node_modules | node_modules/@mtfe/vxapp | ^(node_modules/@mtfe/vxapp) | ignore |
-|--------------|--------------------------|-----------------------------|--------|
-| 0            | 0                        | 1                           | 0      |
-| 1            | 0                        | 1                           | 1      |
-| 1            | 1                        | 0                           | 0      |
+| node_modules | node_modules/@mtfe/vxapp | ^(node_modules/@mtfe/vxapp) | temp |
+|--------------|--------------------------|-----------------------------|------|
+| 0            | 0                        | 1                           | 0    |
+| 1            | 0                        | 1                           | 1    |
+| 1            | 1                        | 0                           | 0    |
+| 1            | 1                        | 0                           | 0    |
 
-ignore = (node_modules) AND ^(node_modules/@mtfe/vxapp)
+temp = (node_modules) AND ^(node_modules/@mtfe/vxapp)
+
+| node_modules/@mtfe/vxapp | temp | node_modules/@mtfe/vxapp/node_modules | ignore |
+|--------------------------|------|---------------------------------------|--------|
+| 0                        | 0    | 0                                     | 0      |
+| 0                        | 1    | 0                                     | 1      |
+| 1                        | 0    | 0                                     | 0      |
+| 1                        | 0    | 1                                     | 1      |
+
+ignore = temp OR (node_modules/@mtfe/vxapp/node_modules)
  */
 
 const babelOptions = {
   ignore: x => {
-    return /node_modules/i.test(x) && !x.includes('node_modules/@mtfe/vxapp')
+    return /node_modules/i.test(x)
+        && !/node_modules\/@mtfe\/vxapp/i.test(x)
+        || /node_modules\/@mtfe\/vxapp(\/node_modules)/i.test(x);
   },
   presets: [
     require('babel-preset-es2015'),
