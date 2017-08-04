@@ -1,0 +1,5 @@
+* [安装](setup/readme.md)
+* [命令](command/readme.md)
+* [组件](component/readme.md)
+  * [App](component/App.md)
+  * [Page](component/Page.md)
