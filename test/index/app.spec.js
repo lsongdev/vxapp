@@ -3,12 +3,38 @@ import { expect, assert, should } from 'chai'
 import sinon from 'sinon'
 
 import { wx } from '../wx'
+import { App, Page } from '../mini-program'
 import { vxapp, vxapp$run } from '../vxapp'
 
 global.wx = wx
 
 describe('App', function() {
   class appForTest extends vxapp.App {}
+
+  describe('custom function', function() {
+    it('should be copied to initiation object', function() {
+      class appWithFn extends vxapp.App {
+        doSthInApp() {
+          return 'app'
+        }
+      }
+
+      class pageWithFn extends vxapp.Page {
+        doSthInPage() {
+          return 'page'
+        }
+      }
+
+      const app = vxapp$run(appWithFn, App)
+      const page = vxapp$run(pageWithFn, Page)
+
+      expect(app.doSthInApp).to.be.a('function')
+      expect(app.doSthInApp()).to.equal('app')
+
+      expect(page.doSthInPage).to.be.a('function')
+      expect(page.doSthInPage()).to.equal('page')
+    })
+  })
 
   describe('wx2promise', function() {
     let app = new appForTest
