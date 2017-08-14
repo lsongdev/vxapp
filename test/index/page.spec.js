@@ -66,13 +66,13 @@ describe('Page', function() {
   describe('#onReachBottom', function() {
     it('should fetch data', async function() {
       const list = [1, 2, 3]
+      page.data = { list: [] }
       page.onFetch = page.onFetch || (function() {})
       sandbox.stub(page, 'onFetch').resolves(list)
 
       await page.onReachBottom()
 
       sinon.assert.called(page.onFetch)
-      sinon.assert.called(page.$ctx.setData)
     })
   })
 })
