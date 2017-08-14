@@ -13,11 +13,18 @@ export const wx = {
   getSystemInfo: function() {},
   getNetworkType: function() {},
   showToast: function() {},
+  hideToast: function() {},
+  showNavigationBarLoading: function() {},
+  hideNavigationBarLoading: function() {},
   showModal: function() {},
   showActionSheet: function() {},
   setNavigationBarTitle: function() {},
   getLocation: function() {},
 
   login: function() {},
-  getUserInfo: function() {}
+  getUserInfo: function() {},
+
+  stopPullDownRefresh: function() {},
+
+  request: function() {}
 }
