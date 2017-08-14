@@ -273,5 +273,104 @@ describe('App', function() {
     })
     
   })
+
+  describe('request', function() {
+    let app
+    let sandbox
+
+    beforeEach(function() {
+      app = new appForTest
+      sandbox = sinon.sandbox.create()
+    })
+
+    afterEach(function() {
+      sandbox.restore()
+      app = null
+    })
+
+    describe('#config', function() {
+      it('should set key-value pair in options', async function() {
+        const options = {
+          test: 'this is a test string'
+        }
+        sandbox.stub(wx, 'request').yieldsTo('complete', {})
+
+        try {
+          await app.request()
+                   .config('test', options.test)
+                   .end()
+
+          sinon.assert.calledWithMatch(wx.request, { options })
+        } catch(err) {
+          throw new Error(err)
+        }
+
+      })
+    })
+
+    describe('#header', function() {
+      it('should set header', async function() {
+        const header = {
+          'x-test': 'test'
+        }
+        sandbox.stub(wx, 'request').yieldsTo('complete', {})
+
+        try {
+          await app.request()
+                   .header('x-test', header['x-test'])
+                   .end()
+
+          sinon.assert.calledWithMatch(wx.request, { header })
+        } catch(err) {
+          throw new Error(err)
+        }
+
+      })
+    })
+
+    describe('#query', function() {
+      it('should set queryString', async function() {
+        const query = {
+          x: 'x',
+          y: 'y'
+        }
+        sandbox.stub(wx, 'request').yieldsTo('complete', {})
+
+        try {
+          await app.request()
+                   .get('http://tets.com')
+                   .query('x', query['x'])
+                   .query('y', query['y'])
+                   .end()
+
+          sinon.assert.calledWithMatch(wx.request, { url: 'http://tets.com?x=x&y=y' })
+        } catch(err) {
+          throw new Error(err)
+        }
+      })
+    })
+
+    describe('#send', function() {
+      it('should set data in \'data\' field', async function() {
+        const data = {
+          x: 'x',
+          y: 'y'
+        }
+        sandbox.stub(wx, 'request').yieldsTo('complete', {})
+
+        try {
+          await app.request()
+                   .post('http://tets.com')
+                   .send('x', data['x'])
+                   .send('y', data['y'])
+                   .end()
+
+          sinon.assert.calledWithMatch(wx.request, { data })
+        } catch(err) {
+          throw new Error(err)
+        }
+      })
+    })
+  })
   
 })

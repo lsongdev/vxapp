@@ -13,6 +13,9 @@ export const wx = {
   getSystemInfo: function() {},
   getNetworkType: function() {},
   showToast: function() {},
+  hideToast: function() {},
+  showNavigationBarLoading: function() {},
+  hideNavigationBarLoading: function() {},
   showModal: function() {},
   showActionSheet: function() {},
   setNavigationBarTitle: function() {},
@@ -21,5 +24,7 @@ export const wx = {
   login: function() {},
   getUserInfo: function() {},
 
-  stopPullDownRefresh: function() {}
+  stopPullDownRefresh: function() {},
+
+  request: function() {}
 }
