@@ -1,0 +1,33 @@
+{
+  "author": "梁伟文 <liangweiwen@meituan.com>",
+  "description": "This is a sample book created by gitbook",
+  "extension": null,
+  "generator": "site",
+  "isbn": "",
+  "links": {
+      "sharing": {
+          "all": null,
+          "facebook": null,
+          "google": null,
+          "twitter": null,
+          "weibo": null
+      }
+  },
+  "output": null,
+  "pdf": {
+      "fontSize": 12,
+      "footerTemplate": null,
+      "headerTemplate": null,
+      "margin": {
+          "bottom": 36,
+          "left": 62,
+          "right": 62,
+          "top": 36
+      },
+      "pageNumbers": false,
+      "paperSize": "a4"
+  },
+  "plugins": [],
+  "title": "vxapp 文档",
+  "variables": {}
+}
