@@ -9,7 +9,6 @@ export const wx = {
   setStorageSync: function() {},
   getStorageSync: function() {},
 
-  // native functions
   getSystemInfo: function() {},
   getNetworkType: function() {},
   showToast: function() {},
@@ -20,6 +19,10 @@ export const wx = {
   showActionSheet: function() {},
   setNavigationBarTitle: function() {},
   getLocation: function() {},
+
+  navigateTo: function() {},
+  redirectTo: function() {},
+  navigateBack: function() {},
 
   login: function() {},
   getUserInfo: function() {},

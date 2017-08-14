@@ -186,7 +186,45 @@ describe('native wrapper', function() {
   })
 
   describe('#goto', function() {
-    it('should goto specific page')
+    const fakePages = [
+      'x',
+      'x/y',
+      'x?id=1'
+    ]
+
+    context('when called with string', function() {
+      it('should navigate to specific page', function() {
+        sandbox.stub(app, 'pages').returns(fakePages)
+        sandbox.stub(wx, 'navigateTo')
+
+        app.goto(fakePages[1])
+
+        sinon.assert.calledWith(wx.navigateTo, { url: fakePages[1] })
+      })
+    })
+
+    context('when called with string and pages.length > 5', function() {
+      it('should redirect to specific page', function() {
+        sandbox.stub(app, 'pages').returns(fakePages.concat(fakePages))
+        sandbox.stub(wx, 'redirectTo')
+
+        app.goto(fakePages[1])
+
+        sinon.assert.calledWith(wx.redirectTo, { url: fakePages[1] })
+      })
+    })
+
+    context('when called with number', function() {
+      it('should go back to specific page', function() {
+        sandbox.stub(app, 'pages').returns(fakePages)
+        sandbox.stub(wx, 'navigateBack')
+
+        app.goto(2)
+
+        sinon.assert.calledWith(wx.navigateBack, { delta: 2 })
+      })
+    })
+    
   })
 
   describe('#request', function() {
