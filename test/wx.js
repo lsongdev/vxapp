@@ -19,5 +19,7 @@ export const wx = {
   getLocation: function() {},
 
   login: function() {},
-  getUserInfo: function() {}
+  getUserInfo: function() {},
+
+  stopPullDownRefresh: function() {}
 }

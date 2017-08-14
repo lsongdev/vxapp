@@ -184,4 +184,10 @@ describe('native wrapper', function() {
     })
     
   })
+
+  describe('#goto', function() {
+    it('should goto specific page')
+  })
+
+  describe('#request', function() {})
 })
