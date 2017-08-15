@@ -61,6 +61,6 @@ export default class Index extends $.Page {
 
 [小程序文档]: https://mp.weixin.qq.com/debug/wxadoc/dev/framework/app-service/app.html
 [配置]: https://mp.weixin.qq.com/debug/wxadoc/dev/framework/config.html
-[配置打包]: /directory/config.md
-[initData]: /app/Page.md#initdata
+[配置打包]: ../directory/config.md
+[initData]: Page.md#initdata
 [组件]: https://mp.weixin.qq.com/debug/wxadoc/dev/component
