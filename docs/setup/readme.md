@@ -6,7 +6,7 @@
 mnpm install -g @mtfe/vxapp
 ```
 
-另一种更推荐的方式是在项目根目录安装。
+另一种更推荐的方式是本地安装。
 
 ```bash
 mnpm install --save @mtfe/vxapp

@@ -1,6 +1,6 @@
 {
   "author": "梁伟文 <liangweiwen@meituan.com>",
-  "description": "This is a sample book created by gitbook",
+  "description": "This is a documentation for vxapp",
   "extension": null,
   "generator": "site",
   "isbn": "",
@@ -27,7 +27,12 @@
       "pageNumbers": false,
       "paperSize": "a4"
   },
-  "plugins": [],
+  "plugins" : ["page-toc"],
+  "pluginsConfig": {
+    "page-toc": {
+        "position": "top"
+    }
+  },
   "title": "vxapp 文档",
   "variables": {}
 }
