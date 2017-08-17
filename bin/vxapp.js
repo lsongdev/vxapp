@@ -1,8 +1,37 @@
 #!/usr/bin/env node
+
+/**
+| node_modules | node_modules/@mtfe/vxapp | ^(node_modules/@mtfe/vxapp) | temp |
+|--------------|--------------------------|-----------------------------|------|
+| 0            | 0                        | 1                           | 0    |
+| 1            | 0                        | 1                           | 1    |
+| 1            | 1                        | 0                           | 0    |
+| 1            | 1                        | 0                           | 0    |
+
+temp = (node_modules) AND ^(node_modules/@mtfe/vxapp)
+
+| node_modules/@mtfe/vxapp | temp | node_modules/@mtfe/vxapp/node_modules | ignore |
+|--------------------------|------|---------------------------------------|--------|
+| 0                        | 0    | 0                                     | 0      |
+| 0                        | 1    | 0                                     | 1      |
+| 1                        | 0    | 0                                     | 0      |
+| 1                        | 0    | 1                                     | 1      |
+
+ignore = temp OR (node_modules/@mtfe/vxapp/node_modules)
+ */
+
 const babelOptions = {
+  ignore: x => {
+    return /node_modules/i.test(x)
+        && !/node_modules\/@mtfe\/vxapp/i.test(x)
+        || /node_modules\/@mtfe\/vxapp(\/node_modules)/i.test(x);
+  },
   presets: [
     require('babel-preset-es2015'),
     require('babel-preset-stage-0')
+  ],
+  plugins: [
+    injectConfig()
   ]
 };
 require('babel-register')(babelOptions);
@@ -38,6 +67,7 @@ const envs = (function(e='dev') {
     return ['default', first, ...rest];
   }
 })(process.env.NODE_ENV);
+let ENV_OBJECT = {};
 
 mkdir.sync(src);
 mkdir.sync(conf);
@@ -133,7 +163,7 @@ function addImport(code, name, pkg){
 function addRegister(code, type){
   var run = "$Run(exports['default'], Page);";
   if(type === 'app') run = run.replace('Page', 'App');
-  return addImport(code, '{ $Run }', 'vxapp') + run;
+  return addImport(code, '{ $Run }', '@mtfe/vxapp') + run;
 }
 
 function transform(filename, type, to){
@@ -142,7 +172,7 @@ function transform(filename, type, to){
       code = addRegister(code, type);
     }
     to = to || filename.replace(src, out);
-    babelOptions.plugins = [ parseImport(filename) ];
+    babelOptions.plugins = [ injectConfig(), parseImport(filename)  ];
     var result = babel.transform(code, babelOptions);
     mkdir(path.dirname(to), err => {
       fs.writeFile(to, result.code, noop);
@@ -190,6 +220,9 @@ function compile(filename){
 
 function run(){
 
+  // merge all envs
+  mergeEnvironment(envs);
+
   find([
     src + '/app.js',
     src + '/app.css',
@@ -200,9 +233,6 @@ function run(){
     src + '/images/**/*',
     src + '/scripts/**/*.js'
   ]).forEach(compile);
-
-  // merge all envs
-  mergeEnvironment(envs);
 
 }
 
@@ -252,6 +282,18 @@ function parseImport (current){
   };
 }
 
+function injectConfig() {
+  return {
+    visitor: {
+      Literal: function(path) {
+        if (path.node.value === 'VXAPP_CONFIG_STUB') {
+          path.replaceWithSourceString(`exports.config=${JSON.stringify(ENV_OBJECT)}`)
+        }
+      }
+    }
+  }
+}
+
 function mergeEnvironment(names) {
   // find out all env files
   const envFiles = names.map(name => {
@@ -260,17 +302,9 @@ function mergeEnvironment(names) {
     return [].concat.apply(a, b);
   }, []);
 
-  const config = envFiles.reduce((config, filename) => {
+  ENV_OBJECT = envFiles.reduce((config, filename) => {
     return Object.assign({}, config, (x => x && x.__esModule ? x.default : x)(require(filename)));
   }, {});
-
-  const code = dedent`
-    export default ${JSON.stringify(config)}
-  `;
-
-  const result = babel.transform(code, babelOptions);
-
-  fs.writeFile(path.join(out, 'config.js'), result.code, noop);
 }
 
 function init(dir){
@@ -279,7 +313,7 @@ function init(dir){
 
   // app.js
   fs.writeFile(path.join(dir, 'src/app.js'), dedent`
-  import $ from 'vxapp';
+  import $ from '@mtfe/vxapp';
 
   export default class extends $.App {
     static config = {
@@ -289,7 +323,7 @@ function init(dir){
       window: {
         navigationBarBackgroundColor: 'black',
         navigationBarTextStyle: 'white',
-        navigationBarTitleText: 'vxapp',
+        navigationBarTitleText: $.config.libName,
         backgroundColor: 'grey',
         backgroundTextStyle: "#333"
       }
@@ -304,7 +338,7 @@ function init(dir){
 
   // pages/index/index.js
   fs.writeFile(path.join(dir, 'src/pages/index/index.js'), dedent`
-  import $ from 'vxapp';
+  import $ from '@mtfe/vxapp';
 
   export default class Index extends $.Page {
     initData(){
