@@ -1,0 +1,13 @@
+{
+  "require": [
+    "babel-register",
+    "babel-polyfill"
+  ],
+  "report-dir": "./",
+  "reporter": [
+    "lcov",
+    "text-summary"
+  ],
+  "sourceMap": false,
+  "instrument": false
+}
