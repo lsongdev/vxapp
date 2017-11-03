@@ -37,7 +37,7 @@ const babelOptions = {
 require('babel-register')(babelOptions);
 
 const fs      = require('fs');
-const ncp     = require('ncp');
+const ncp     = require('ncp').ncp;
 const path    = require('path');
 const glob    = require('glob');
 const mkdir   = require('mkdirp');
@@ -235,9 +235,9 @@ function run(){
   ]).forEach(compile);
 
   // 
-  ncp(src + '/utils', out + '/utils', function(err) {
-    if(err && err.length > 0) {
-      console.log("{ncp error}:", err);
+  ncp(src + '/utils', out + '/utils', function(res) {
+    if(res && res.length > 0) {
+      console.log("{ncp error}:", res);
     }
   });
 }
