@@ -421,8 +421,7 @@ exports.$Run = function(Component, register){
     }) : prop;
     return item;
   }, {});
-  const optional = typeof com.initData === 'function' ? com.initData() : {};
-  options.data = Object.assign({}, Object.assign(com.data || {}, optional));
+  options.data = Object.assign({}, Object.assign(com.data || {}, com.initData()));
   register(options);
 
 }
