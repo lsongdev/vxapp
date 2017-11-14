@@ -10,4 +10,7 @@
         * [initData](app/App.md#initdata)
     * [Page](app/Page.md)
         * [initData](app/Page.md#initdata)
-
+* [使用教程](tutorial/readme.md)
+    * [新建页面](tutorial/newpage.md)
+    * [API 的使用](tutorial/useapi.md)
+* [开发指南](develop/readme.md)
