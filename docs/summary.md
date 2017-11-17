@@ -13,4 +13,5 @@
 * [使用教程](tutorial/readme.md)
     * [新建页面](tutorial/newpage.md)
     * [API 的使用](tutorial/useapi.md)
+    * [使用样式](tutorial/style.md)
 * [开发指南](develop/readme.md)

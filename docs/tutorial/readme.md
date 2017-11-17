@@ -8,3 +8,4 @@
 
 1. [新建页面](newpage.md)
 1. [API 的使用](useapi.md)
+1. [使用样式](style.md)
