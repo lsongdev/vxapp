@@ -26,6 +26,10 @@ $ npm install -g vxapp
     -w, --watch  watching files change
 ```
 
+### Docs
+
+`cd docs & gitbook serve .`
+
 ### Contributing
 - Fork this Repo first
 - Clone your Repo
