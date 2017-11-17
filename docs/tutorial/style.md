@@ -5,9 +5,9 @@
 ```css
 .section {
   input {
-    border-bottom:1px solid red;
-    margin:10rpx;
-    padding:5px;
+    border-bottom: 1px solid red;
+    margin: 10rpx;
+    padding: 5px;
   }
 }
 ```
