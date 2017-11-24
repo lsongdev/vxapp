@@ -234,6 +234,12 @@ function run(){
     src + '/scripts/**/*.js'
   ]).forEach(compile);
 
+  // 
+  ncp(src + '/utils', out + '/utils', function(err) {
+    if(err && err.length > 0) {
+      console.log("{ncp error}:", err);
+    }
+  });
 }
 
 function parseImport (current){
