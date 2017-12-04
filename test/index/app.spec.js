@@ -25,8 +25,8 @@ describe('App', function() {
         }
       }
 
-      const app = vxapp$run(appWithFn, App)
-      const page = vxapp$run(pageWithFn, Page)
+      const app = vxapp$run(appWithFn, App, 'App')
+      const page = vxapp$run(pageWithFn, Page, 'Page')
 
       expect(app.doSthInApp).to.be.a('function')
       expect(app.doSthInApp()).to.equal('app')
