@@ -1,5 +1,30 @@
 const META_DATA = '_';
 
+const HOOKS = {
+  'App': {},
+  'Page': {}
+};
+
+function creatHookEvent(name, component, cancelFn, stopFn) {
+  const event = {};
+  Object.defineProperties(event, {
+    name: {
+      value: name
+    },
+    component: {
+      value: component
+    },
+    cancel: {
+      value: cancelFn
+    },
+    stop: {
+      value: stopFn
+    }
+  })
+
+  return event
+}
+
 exports.App = class App {
 
   constructor() {
@@ -423,8 +448,73 @@ exports.$Run = function(Component, register, registerName){
   }, {});
   const optional = typeof com.initData === 'function' ? com.initData() : {};
   options.data = Object.assign({}, Object.assign(com.data || {}, optional));
+  // add hook
+  const existKeys = new Set(Object.keys(options))
+  const hooks = HOOKS[registerName]
+  Object.keys(hooks).forEach(name => {
+    let shouldCancel = false
+    let shouldStop = false
+    const event = creatHookEvent(
+      name,
+      com,
+      function() {
+        shouldCancel = true
+      },
+      function() {
+        shouldStop = true
+      }
+    );
+
+    function triggerHook() {
+      Object.defineProperties(event, {
+        arguments: {
+          value: arguments
+        },
+        result: {
+          value: undefined,
+          writable: true
+        }
+      });
+      for (const fn of hooks[name]) {
+        fn.apply(this, [event]);
+        if (shouldCancel) break;
+      }
+
+      if (!shouldStop && event.$hookedFunction) {
+        event.$hookedFunction.apply(this, arguments)
+      }
+    }
+
+    if (existKeys.has(name)) {
+      const originalFn = options[name];
+      if (typeof originalFn === 'function') {
+        Object.defineProperty(event, '$hookedFunction', {
+          value: originalFn
+        })
+      }
+    }
+    
+    options[name] = triggerHook;
+  })
   register(options);
 
 }
+
+;['App', 'Page'].forEach(r => {
+  exports[`register${r}Hook`] = function(name, handler) {
+    if (HOOKS[r][name]) {
+      HOOKS[r][name].push(handler);
+    } else {
+      HOOKS[r][name] = [handler];
+    }
+    return this;
+  }
+
+  exports[`clear${r}Hook`] = function(name) {
+    if (typeof name === 'string') {
+      HOOKS[r][name].length = 0;
+    }
+  }
+});
 
 'VXAPP_CONFIG_STUB';
