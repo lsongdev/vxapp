@@ -161,8 +161,8 @@ function addImport(code, name, pkg){
 }
 
 function addRegister(code, type){
-  var run = "$Run(exports['default'], Page);";
-  if(type === 'app') run = run.replace('Page', 'App');
+  var run = "$Run(exports['default'], Page, 'Page');";
+  if(type === 'app') run = run.replace(/Page/g, 'App');
   return addImport(code, '{ $Run }', '@mtfe/vxapp') + run;
 }
 
@@ -234,12 +234,6 @@ function run(){
     src + '/scripts/**/*.js'
   ]).forEach(compile);
 
-  // 
-  ncp(src + '/utils', out + '/utils', function(err) {
-    if(err && err.length > 0) {
-      console.log("{ncp error}:", err);
-    }
-  });
 }
 
 function parseImport (current){

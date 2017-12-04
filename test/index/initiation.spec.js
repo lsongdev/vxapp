@@ -14,7 +14,7 @@ describe('data initiation', function() {
       it('should have an object data by default', function() {
         class appWithoutInitData extends vxapp.App {
         }
-        let dummy = vxapp$run(appWithoutInitData, mp.App)
+        let dummy = vxapp$run(appWithoutInitData, mp.App, 'App')
         expect(dummy.data).to.be.a('object')
       })
     })
@@ -28,7 +28,7 @@ describe('data initiation', function() {
             }
           }
         }
-        let dummy = vxapp$run(appWithInitData, mp.App)
+        let dummy = vxapp$run(appWithInitData, mp.App, 'App')
         expect(dummy.data).to.have.property('str').with.equal('This is a test string.')
       })
     })
@@ -40,7 +40,7 @@ describe('data initiation', function() {
       it('should have an object data by default', function() {
         class PageWithoutInitData extends vxapp.Page {
         }
-        let dummy = vxapp$run(PageWithoutInitData, mp.Page)
+        let dummy = vxapp$run(PageWithoutInitData, mp.Page, 'Page')
         expect(dummy.data).to.be.a('object')
       })
     })
@@ -54,7 +54,7 @@ describe('data initiation', function() {
             }
           }
         }
-        let dummy = vxapp$run(PageWithInitData, mp.Page)
+        let dummy = vxapp$run(PageWithInitData, mp.Page, 'Page')
         expect(dummy.data).to.have.property('str').with.equal('This is a test string.')
       })
     })

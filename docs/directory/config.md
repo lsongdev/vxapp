@@ -24,4 +24,4 @@
 
 > `NODE_DEV=alipay` 的结果是 `default.js`、`dev.env.js` 和 `alipay.js` 被包括。还记得 `dev` 环境是默认的吗？
 
-你甚至可以使用 `NODE_DEV=prod,weixinpay,alipay` 来包含更多的配置文件——只要牢记文件名的顺序决定了变量覆盖的优先级。
+你甚至可以使用 `NODE_DEV=prod,weixinpay,alipay` 来包含更多的配置文件——只要牢记文件名的先后顺序决定了变量覆盖的先后顺序。
