@@ -161,7 +161,7 @@ function addImport(code, name, pkg){
 }
 
 function addRegister(code, type){
-  var run = "$Run(exports['default'], Page);";
+  var run = "$Run(exports['default'], Page, 'Page');";
   if(type === 'app') run = run.replace('Page', 'App');
   return addImport(code, '{ $Run }', '@mtfe/vxapp') + run;
 }

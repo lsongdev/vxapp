@@ -397,7 +397,7 @@ exports.Page = class Page {
   }
 }
 
-exports.$Run = function(Component, register){
+exports.$Run = function(Component, register, registerName){
   const com = new Component();
   let props = [];
   let Ctor = Component;
