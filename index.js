@@ -4,26 +4,50 @@ const HOOKS = {
   'App': {},
   'Page': {}
 };
+let createHookHandler = function({ cls, name, component, origin, hooks }) {
+  return function() {
+    let event = {};
+    let shouldCancel = false;
+    let shouldStop = false;
 
-function creatHookEvent(name, component, cancelFn, stopFn) {
-  const event = {};
-  Object.defineProperties(event, {
-    name: {
-      value: name
-    },
-    component: {
-      value: component
-    },
-    cancel: {
-      value: cancelFn
-    },
-    stop: {
-      value: stopFn
+    Object.defineProperties(event, {
+      name: {
+        value: name
+      },
+      component: {
+        value: component
+      },
+      cancel: {
+        value: function() {
+          shouldCancel = true;
+        }
+      },
+      stop: {
+        value: function() {
+          shouldStop = true;
+        }
+      },
+      args: {
+        value: arguments
+      },
+      result: {
+        value: undefined,
+        writable: true
+      }
+    });
+
+    for (const hook of hooks) {
+      hook.call(this, event);
+      if (shouldCancel) break;
     }
-  })
 
-  return event
-}
+    if (!shouldStop
+        && origin
+        && typeof origin === 'function') {
+      origin.apply(this, arguments);
+    }
+  }
+};
 
 exports.App = class App {
 
@@ -449,55 +473,27 @@ exports.$Run = function(Component, register, registerName){
   const optional = typeof com.initData === 'function' ? com.initData() : {};
   options.data = Object.assign({}, Object.assign(com.data || {}, optional));
   // add hook
-  const existKeys = new Set(Object.keys(options))
   const hooks = HOOKS[registerName]
   Object.keys(hooks).forEach(name => {
-    let shouldCancel = false
-    let shouldStop = false
-    const event = creatHookEvent(
+    options[name] = createHookHandler({
+      cls: registerName,
       name,
-      com,
-      function() {
-        shouldCancel = true
-      },
-      function() {
-        shouldStop = true
-      }
-    );
-
-    function triggerHook() {
-      Object.defineProperties(event, {
-        arguments: {
-          value: arguments
-        },
-        result: {
-          value: undefined,
-          writable: true
-        }
-      });
-      for (const fn of hooks[name]) {
-        fn.apply(this, [event]);
-        if (shouldCancel) break;
-      }
-
-      if (!shouldStop && event.$hookedFunction) {
-        event.$hookedFunction.apply(this, arguments)
-      }
-    }
-
-    if (existKeys.has(name)) {
-      const originalFn = options[name];
-      if (typeof originalFn === 'function') {
-        Object.defineProperty(event, '$hookedFunction', {
-          value: originalFn
-        })
-      }
-    }
-    
-    options[name] = triggerHook;
+      component: com,
+      origin: options[name],
+      hooks: hooks[name]
+    });
   })
   register(options);
 
+}
+
+exports.setHookCreator = function(fn) {
+  if (typeof fn === 'function') {
+    createHookHandler = fn
+    return true
+  } else {
+    return false
+  }
 }
 
 ;['App', 'Page'].forEach(r => {
