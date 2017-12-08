@@ -341,7 +341,7 @@ function init(dir){
   import $ from '@mtfe/vxapp';
 
   export default class Index extends $.Page {
-    initData(){
+    initData () {
       return { name: $.config.libName };
     }
   }`, noop);
