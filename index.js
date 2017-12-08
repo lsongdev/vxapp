@@ -4,18 +4,35 @@ const HOOKS = {
   'App': {},
   'Page': {}
 };
-let createHookHandler = function({ cls, name, component, origin, hooks }) {
+
+let DEFAULT_CREATOR = function({ type, name, component, origin, hooks }) {
   return function() {
     let event = {};
     let shouldCancel = false;
     let shouldStop = false;
 
     Object.defineProperties(event, {
+      type: {
+        value: type
+      },
       name: {
         value: name
       },
       component: {
         value: component
+      },
+      origin: {
+        value: origin
+      },
+      args: {
+        value: arguments
+      },
+      data: {
+        value: {}
+      },
+      result: {
+        value: undefined,
+        writable: true
       },
       cancel: {
         value: function() {
@@ -27,13 +44,6 @@ let createHookHandler = function({ cls, name, component, origin, hooks }) {
           shouldStop = true;
         }
       },
-      args: {
-        value: arguments
-      },
-      result: {
-        value: undefined,
-        writable: true
-      }
     });
 
     for (const hook of hooks) {
@@ -48,6 +58,7 @@ let createHookHandler = function({ cls, name, component, origin, hooks }) {
     }
   }
 };
+let createHookHandler = DEFAULT_CREATOR
 
 exports.App = class App {
 
@@ -476,7 +487,7 @@ exports.$Run = function(Component, register, registerName){
   const hooks = HOOKS[registerName]
   Object.keys(hooks).forEach(name => {
     options[name] = createHookHandler({
-      cls: registerName,
+      type: registerName,
       name,
       component: com,
       origin: options[name],
@@ -492,6 +503,7 @@ exports.setHookCreator = function(fn) {
     createHookHandler = fn
     return true
   } else {
+    createHookHandler = DEFAULT_CREATOR
     return false
   }
 }
