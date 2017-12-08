@@ -242,19 +242,40 @@ function parseImport (current){
       return require.resolve(name);
     }catch(e){};
   }
+
+  /**
+   * /Users/weinliang/project/temp/vxapp/node_modules/@mtfe/tyto/xxx/index.js
+   */
+  const getPackageName = (filename) => {
+    let p = filename;
+    do{
+      p = path.dirname(p);
+      try{
+        return require(path.join(p, 'package.json')).name;
+      }catch(e){
+        // nothing
+      }
+    } while(p !== '/' && p !== '.');
+  }
+
   const replaceWithAlias = (name) => {
-    var filename = resolve(name);
-    if(!filename) filename = path.resolve(path.dirname(current), name);
-    var varname = path.basename(filename, '.js');
-    if(/node_modules/.test(filename)) {
-      varname = name;
-      const to = path.join(out, 'scripts', varname) + '.js';
-      mkdir.sync(path.dirname(filename));
-      transform(filename, null, to);
-      filename = to;
+    // safe find module
+    var requiredFilename = resolve(name);
+    if(!requiredFilename) requiredFilename = path.resolve(path.dirname(current), name);
+    // source
+    if(/node_modules/.test(current)){
+      const currentName = getPackageName(current) + '.js';
+      current = path.join(out, 'scripts', currentName);
     }
-    filename = filename.replace(src, out);
-    return path.relative(path.dirname(current.replace(src, out)), filename);
+    // target
+    if(/node_modules/.test(requiredFilename)) {
+      const to = path.join(out, 'scripts', getPackageName(requiredFilename)) + '.js';
+      mkdir.sync(path.dirname(requiredFilename));
+      transform(requiredFilename, null, to);
+      requiredFilename = to;
+    }
+    requiredFilename = requiredFilename.replace(src, out);
+    return path.relative(path.dirname(current.replace(src, out)), requiredFilename);
   }
   return {
     visitor: {
@@ -341,7 +362,7 @@ function init(dir){
   import $ from '@mtfe/vxapp';
 
   export default class Index extends $.Page {
-    initData(){
+    initData () {
       return { name: $.config.libName };
     }
   }`, noop);

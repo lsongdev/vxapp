@@ -13,6 +13,7 @@ describe('hook', function() {
 
   afterEach(function() {
     vxapp.clearAppHook('onLaunch')
+    vxapp.setHookCreator()
   })
 
   describe('hook app onLaunch', function() {
@@ -76,6 +77,10 @@ describe('hook', function() {
       h = app = null
     })
     
+    it('should has type property', function() {
+      assert(h.calledWithMatch({ type: 'App' }))
+    })
+
     it('should has name property', function() {
       assert(h.calledWithMatch({ name: 'onLaunch' }))
     })
@@ -84,12 +89,20 @@ describe('hook', function() {
       expect(h.args[0][0]['component']).to.be.an('object')
     })
 
-    it('should has arguments property', function() {
-      expect(h.args[0][0]['arguments']).to.be.arguments
+    it('should has args property', function() {
+      expect(h.args[0][0]['args']).to.be.arguments
+    })
+
+    it('should has origin property', function() {
+      expect(h.args[0][0]).to.has.property('origin')
     })
 
     it('should has result property', function() {
       assert(h.calledWithMatch({ result: undefined }))
+    })
+
+    it('should has data property', function() {
+      expect(h.args[0][0]['data']).to.be.an('object')
     })
 
     it('should has cancel function', function() {
@@ -141,6 +154,25 @@ describe('hook', function() {
         assert(h2.called)
         assert(conLaunch.notCalled)
       })
+    })
+  })
+
+  describe('redefine hook creator', function() {
+    it('should call custom creator', function() {
+      function creator(fn) {
+        return function() {
+          ;
+        }
+      }
+      const creatoSpy = sinon.spy(creator)
+      const h = sinon.spy()
+      vxapp.setHookCreator(creatoSpy)
+      vxapp.registerAppHook('onLaunch', h)
+      
+      const app = vxapp$run(simpleApp, App, 'App')
+      app.onLaunch()
+
+      assert(creatoSpy.called)
     })
   })
 })
