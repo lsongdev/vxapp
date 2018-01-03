@@ -406,11 +406,11 @@ exports.App = class App {
 
 exports.Page = class Page {
   setData(data){
-    this.data = this.data || {};
+    this.$ctx.data = this.$ctx.data || {};
     for(let k in data){
-      this.data[ k ] = data[ k ];
+      this.$ctx.data[ k ] = data[ k ];
     }
-    return this.$ctx.setData(this.data);
+    return this.$ctx.setData(this.$ctx.data);
   }
   initData() {
     return Object.assign({}, this.data)
