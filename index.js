@@ -477,6 +477,7 @@ exports.$Run = function(Component, register, registerName){
     item[ key ] = typeof prop === 'function' ? (function(){
       com.$ctx = this;
       if(prop === 'onLoad') com.setData();
+      //TODO: return prop.apply(this, arguments);
       return prop.apply(com, arguments);
     }) : prop;
     return item;
