@@ -181,7 +181,7 @@ function transform(filename, type, to){
 }
 
 function find(dirs, handle){
-  return dirs.map(dir => glob.sync(dir)).reduce((a, b) => {
+  return dirs.map(dir => glob.sync(dir, { nodir: true })).reduce((a, b) => {
     return [].concat.apply(a, b);
   }, []);
 }
