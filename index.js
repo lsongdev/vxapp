@@ -410,6 +410,7 @@ exports.Page = class Page {
     for(let k in data){
       this.$ctx.data[ k ] = data[ k ];
     }
+    this.data = this.$ctx.data;
     return this.$ctx.setData(this.$ctx.data);
   }
   initData() {
