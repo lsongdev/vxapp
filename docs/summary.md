@@ -15,3 +15,7 @@
     * [API 的使用](tutorial/useapi.md)
     * [使用样式](tutorial/style.md)
 * [开发指南](develop/readme.md)
+    * [看](develop/readcode.md)
+    * [测](develop/writetest.md)
+    * [修](develop/fixbug.md)
+    * [写](develop/updatedocs.md)
