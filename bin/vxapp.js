@@ -188,6 +188,18 @@ function find(dirs, handle){
 
 function compile(filename){
   var type = 'other';
+  /**
+   * author: liangweiwen
+   * date: 2018.03.15
+   * description: watch src/components and copy to build
+  */
+  if (/src\/components/.test(filename)) {
+    const to = filename.replace(src, out);
+    mkdir.sync(path.dirname(to));
+    fs.createReadStream(filename)
+    .pipe(fs.createWriteStream(to));
+    return;
+  }
   const ext = filename.split('.').slice(-1)[0];
   if(/app\.js$/.test(filename)) type = 'app';
   if(/images/.test(filename)) type = 'image';
@@ -231,7 +243,9 @@ function run(){
     src + '/pages/**/!(_)*.css',
 
     src + '/images/**/*',
-    src + '/scripts/**/*.js'
+    src + '/scripts/**/*.js',
+
+    src + '/components/**/*.*',
   ]).forEach(compile);
 
 }
