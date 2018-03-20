@@ -188,19 +188,24 @@ function find(dirs, handle){
 
 function compile(filename){
   var type = 'other';
+  const ext = filename.split('.').slice(-1)[0];
   /**
    * author: liangweiwen
    * date: 2018.03.15
    * description: watch src/components and copy to build
   */
   if (/src\/components/.test(filename)) {
+    if (ext === 'css') {
+      wxss(filename);
+      return;
+    }
     const to = filename.replace(src, out);
     mkdir.sync(path.dirname(to));
     fs.createReadStream(filename)
     .pipe(fs.createWriteStream(to));
     return;
   }
-  const ext = filename.split('.').slice(-1)[0];
+
   if(/app\.js$/.test(filename)) type = 'app';
   if(/images/.test(filename)) type = 'image';
   if(/pages\/((?!_).)*\.js$/.test(filename)) type = 'page';
@@ -238,6 +243,7 @@ function run(){
   find([
     src + '/app.js',
     src + '/app.css',
+    src + '/wxapp.config.js',
     src + '/pages/**/*.js',
     src + '/pages/**/*.html',
     src + '/pages/**/!(_)*.css',
@@ -330,6 +336,7 @@ function injectConfig() {
 }
 
 function mergeEnvironment(names) {
+  console.warn('WARNNING: Config merging based on environment will be deprecated in the future.')
   // find out all env files
   const envFiles = names.map(name => {
     return glob.sync(`${conf}/${name}?(.env).js`)
