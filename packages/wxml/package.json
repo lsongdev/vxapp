@@ -1,6 +1,6 @@
 {
   "name": "@vxapp/wxml",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "wechat mini-program wxml parser",
   "author": "Lsong <song940@gmail.com>",
   "homepage": "https://github.com/song940/vxapp/tree/master/packages/wxml#readme",
@@ -22,6 +22,5 @@
   ],
   "dependencies": {
     "xml2": "^0.0.1"
-  },
-  "devDependencies": {}
+  }
 }
