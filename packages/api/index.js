@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = api;
+const wx = {
 
-function api() {
-    // TODO
-}
+};
+
+module.exports = wx;

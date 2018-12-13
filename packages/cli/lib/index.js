@@ -4,23 +4,6 @@ const { promisify } = require('util');
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 
-const root = process.cwd();
-// readFile
-const readFile = promisify(fs.readFile);
-const readJSONFile = (filename, encoding = 'utf8') => 
-  readFile(filename, encoding).then(JSON.parse);
-
-const start = async (src, out) => {
-  const resolve = f => path.join(src, f);
-  const appFile = resolve('app.json');
-  const { pages } = await readJSONFile(appFile);
-  const entries = [ 'app' ].concat(pages);
-  const javascripts = entries.map(entry => resolve(`${entry}.js`));
-  const stylesheets = entries.map(entry => resolve(`${entry}.css`));
-  const templates = entries.map(entry => resolve(`${entry}.wxml`));
-  
-  return Promise.all(javascripts.map(script => analyze(script)));
-};
 
 const analyze = async filename => {
   const source = await readFile(filename, 'utf8');
