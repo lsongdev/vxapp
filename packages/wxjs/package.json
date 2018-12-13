@@ -1,7 +1,7 @@
 {
   "name": "@vxapp/wxjs",
-  "version": "0.0.1",
-  "description": "> TODO: description",
+  "version": "0.0.3",
+  "description": "wechat mini-program javascript parser",
   "author": "Lsong <song940@gmail.com>",
   "homepage": "https://github.com/song940/vxapp/tree/master/packages/wxjs#readme",
   "license": "ISC",

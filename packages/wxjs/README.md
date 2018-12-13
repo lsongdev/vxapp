@@ -1,11 +1,11 @@
-# `wxjs`
+## @vxapp/wxjs
 
-> TODO: description
+> vxapp javascript transformer
 
 ## Usage
 
-```
-const wxjs = require('wxjs');
+```js
+const wxjs = require('@vxapp/wxjs');
 
 // TODO: DEMONSTRATE API
 ```

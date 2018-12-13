@@ -4,6 +4,8 @@ const { promisify } = require('util');
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 
+// readFile
+const readFile = promisify(fs.readFile);
 
 const analyze = async filename => {
   const source = await readFile(filename, 'utf8');
@@ -36,9 +38,4 @@ const analyze = async filename => {
   });
 };
 
-(async () => {
-  const src = path.join(root, 'src');
-  const out = path.join(root, 'dist');
-  await start(src, out);
-
-})();
+module.exports = analyze;

@@ -1,11 +1,14 @@
-# `cli`
+## @vxapp/cli
 
-> TODO: description
+> the command line tool for vxapp
 
 ## Usage
 
-```
-const cli = require('cli');
+```bash
+~$ vxapp <command> [options]
 
-// TODO: DEMONSTRATE API
+ - new
+ - build
+ - version
+ - help
 ```

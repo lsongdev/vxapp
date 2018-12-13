@@ -1,11 +1,13 @@
-# `api`
+## @vxapp/api
 
-> TODO: description
+> wechat mini-program api
 
 ## Usage
 
-```
-const api = require('api');
+```js
+const wx = require('@vxapp/api');
 
-// TODO: DEMONSTRATE API
+wx.request({
+  // ...
+});
 ```

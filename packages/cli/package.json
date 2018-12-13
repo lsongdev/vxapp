@@ -1,7 +1,7 @@
 {
   "name": "@vxapp/cli",
-  "version": "0.0.1",
-  "description": "cli",
+  "version": "0.0.3",
+  "description": "the command line tool for vxapp",
   "author": "Lsong <song940@gmail.com>",
   "homepage": "https://github.com/song940/vxapp/tree/master/packages/cli#readme",
   "license": "MIT",
@@ -18,5 +18,14 @@
   },
   "bugs": {
     "url": "https://github.com/song940/vxapp/issues"
-  }
+  },
+  "dependencies": {
+    "@vxapp/wxjs": "^0.0.3",
+    "@vxapp/wxml": "^0.0.3",
+    "@vxapp/wxss": "^0.0.3"
+  },
+  "keywords": [
+    "vxapp",
+    "cli"
+  ]
 }
