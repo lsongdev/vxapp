@@ -1,6 +1,6 @@
 {
   "name": "@vxapp/cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "cli",
   "author": "Lsong <song940@gmail.com>",
   "homepage": "https://github.com/song940/vxapp/tree/master/packages/cli#readme",
