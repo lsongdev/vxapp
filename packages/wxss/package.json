@@ -1,0 +1,30 @@
+{
+  "name": "@vxapp/wxss",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "keywords": [
+    "vxapp",
+    "wxss"
+  ],
+  "author": "Lsong <song940@gmail.com>",
+  "homepage": "https://github.com/song940/vxapp/tree/master/packages/wxss#readme",
+  "license": "MIT",
+  "main": "lib/wxss.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/song940/vxapp.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/song940/vxapp/issues"
+  }
+}
