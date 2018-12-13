@@ -1,18 +1,11 @@
 {
   "name": "@vxapp/wxml",
-  "version": "0.0.1",
-  "description": "> TODO: description",
+  "version": "0.0.5",
+  "description": "wechat mini-program wxml parser",
   "author": "Lsong <song940@gmail.com>",
   "homepage": "https://github.com/song940/vxapp/tree/master/packages/wxml#readme",
   "license": "MIT",
   "main": "index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/song940/vxapp.git"
@@ -26,5 +19,8 @@
   "keywords": [
     "vxapp",
     "wxml"
-  ]
+  ],
+  "dependencies": {
+    "xml2": "^0.0.1"
+  }
 }

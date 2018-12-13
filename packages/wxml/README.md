@@ -1,11 +1,11 @@
-# `wxml`
+## @vxapp/wxml
 
-> TODO: description
+> wechat mini-program wxml parser
 
-## Usage
+### Usage
 
-```
-const wxml = require('wxml');
+```js
+const wxml = require('@vxapp/wxml');
 
 // TODO: DEMONSTRATE API
 ```

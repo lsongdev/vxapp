@@ -1,6 +1,7 @@
 {
   "name": "vxapp",
   "private": true,
+  "appid": "wxb53d46d14f748660",
   "version": "1.0.0",
   "main": "index.js",
   "keywords": [],

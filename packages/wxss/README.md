@@ -1,10 +1,10 @@
-# `wxss`
+## @vxapp/wxss
 
-> TODO: description
+> wechat mini-program wxss parser
 
-## Usage
+### Usage
 
-```
+```js
 const wxss = require('wxss');
 
 // TODO: DEMONSTRATE API

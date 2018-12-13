@@ -1,11 +1,11 @@
-# `core`
+## @vxapp/core
 
-> TODO: description
+> vxapp core library
 
 ## Usage
 
-```
-const core = require('core');
+```js
+const vxapp = require('@vxapp/core');
 
 // TODO: DEMONSTRATE API
 ```
