@@ -22,7 +22,8 @@
   "dependencies": {
     "@vxapp/wxjs": "^0.0.4",
     "@vxapp/wxml": "^0.0.4",
-    "@vxapp/wxss": "^0.0.4"
+    "@vxapp/wxss": "^0.0.4",
+    "wechat-lite": "^3.1.10"
   },
   "keywords": [
     "vxapp",

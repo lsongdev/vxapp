@@ -16,5 +16,8 @@
   },
   "bugs": {
     "url": "https://github.com/song940/vxapp/issues"
+  },
+  "dependencies": {
+    "postcss": "^7.0.6"
   }
 }

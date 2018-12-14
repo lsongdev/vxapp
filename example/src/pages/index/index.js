@@ -1,7 +1,7 @@
-const _ = require('koa');
+const { Page } = require('@vxapp/components-ham-question');
 
-Page({
-  onLoad(){
+class Index extends Page {
+  
+}
 
-  }
-});
+export default Index;

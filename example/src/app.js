@@ -1,3 +1,3 @@
-const index = require('./pages/index/index.js');
+const test = require('test');
 
 App({});
