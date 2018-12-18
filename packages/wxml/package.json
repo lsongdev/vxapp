@@ -21,6 +21,6 @@
     "wxml"
   ],
   "dependencies": {
-    "xml2": "^0.0.1"
+    "xml2": "0.0.7"
   }
 }

@@ -23,17 +23,17 @@ const restore = () => {
 };
 
 const getAppId = () => {
-  var pkg;
+  var pkg, filename = path.join(root, 'project.config.json');
   try{
-    pkg = require(path.join(root, 'package.json'));
+    pkg = require(filename);
   }catch(e){
-    console.log('[@vxapp/cli] not app dir');
+    console.log('[@vxapp/cli] can not access', filename);
     process.exit(2);
     return;
   }
   if(!pkg.appid){
-    console.log('[@vxapp/cli] appid is required in package.json');
-    process.exit(2);
+    console.log('[@vxapp/cli] appid is required in project.config.json');
+    process.exit(3);
     return;
   }
   return pkg.appid;
@@ -47,7 +47,7 @@ const getCode = () => new Promise((resolve, reject) => {
     const { state, qrcode, code } = res;
     switch(state){
       case 0:
-        console.log('qrcode', qrcode);
+        console.log('qrcode:', qrcode);
         break;
       case 405:
         resolve(code);

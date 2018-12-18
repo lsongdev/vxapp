@@ -1,14 +1,22 @@
-const fs = require('fs-extra');
+const fs = require('fs');
 const xml = require('xml2');
 const path = require('path');
+const { promisify } = require('util');
+
+const readFile = promisify(fs.readFile);
 
 module.exports = (src, out, options) => {
   return async (input, output) => {
-    if(!await fs.exists(input))
-      return console.error('[@vxapp/wxml] file does not exists:', input);
-    const source = await fs.readFile(input);
-    xml.parse(source, obj => {
-      console.log(obj);
+    const transform = ast => {
+      return {
+        import(node){
+          node.attributes.src = path.resolve(node.attributes.src);
+        }
+      }
+    }
+    const result = await xml.transformFile(input, {
+      plugins: [ transform ]
     });
+    console.log(result);
   };
 };

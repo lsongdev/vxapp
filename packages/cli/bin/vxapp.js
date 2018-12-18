@@ -12,8 +12,10 @@ program()
   console.log('create vxapp project:', name);
   await create(name);
 })
-.command('build', async ({ src, out }) => {
-  await build(src, out);
+.command('build', async ({ _ }) => {
+  const input = _[0] || 'src';
+  const output = _[1] || 'dist';
+  await build(input, output);
 })
 .command('login', async ({ force = true }) => {
   await devtools.requireLogin({ force });
