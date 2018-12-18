@@ -1,6 +1,6 @@
 {
   "name": "@vxapp/api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "wechat mini-program api",
   "author": "Lsong <song940@gmail.com>",
   "homepage": "https://github.com/song940/vxapp/tree/master/packages/api#readme",
