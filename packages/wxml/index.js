@@ -37,12 +37,12 @@ const wxml = options => {
   const resolve = createResolver(options);
   return moduleResolver(name => {
     const info = resolve(name);
-    wxml.compile(info);
+    wxml.transform(info);
     return info.relative;
   });
 };
 
-wxml.compile = async options => {
+wxml.transform = async options => {
   const { current, source, target } = options;
   const output = current.replace(source, target);
   const result = await xml.transformFile(current, {
@@ -52,6 +52,10 @@ wxml.compile = async options => {
   await ensureDir(path.dirname(output));
   await writeFile(output, result);
   console.log('[@vxapp/wxml] write file:', output);
+};
+
+wxml.compile = async (filename, options) => {
+  return xml.readFile(filename);
 };
 
 module.exports = wxml;

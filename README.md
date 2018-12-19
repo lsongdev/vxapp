@@ -9,6 +9,12 @@
 + @vxapp/wxml 提供对微信小程序的 WXML 模版 AST 解析、遍历、转换
 + @vxapp/wxss 提供对微信小程序的 WXSS 样式文件进行依赖分析、转换
 
+### Get Started
+
+[📺 Watch Video Guide on YouTube](https://youtu.be/zoGTMupm1C0)
+
 ### License
 
 This project is under MIT license.
+
+---

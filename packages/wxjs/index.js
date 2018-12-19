@@ -39,12 +39,12 @@ const wxjs = options => {
   const resolve = createResolver(options);
   return moduelResolver(name => {
     const info = resolve(name);
-    wxjs.compile(info);
+    wxjs.transform(info);
     return info.relative;
   });
 };
 
-wxjs.compile = async options => {
+wxjs.transform = async options => {
   const { current, source, target, plugins = [] } = options;
   const output = current.replace(source, target);
   const content = await readFile(current);

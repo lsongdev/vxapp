@@ -8,17 +8,16 @@ const program = require('../lib/program');
 const devtools = require('../lib/devtools');
 
 program()
-.command('new', async ({ _: [ name ] }) => {
-  console.log('create vxapp project:', name);
-  await create(name);
+.command('new', async ({ _: [ name ], ...options }) => {
+  await create(name, options);
 })
 .command('build', async ({ _ }) => {
   const input = _[0] || 'src';
   const output = _[1] || 'dist';
   await build(input, output);
 })
-.command('login', async ({ force = true }) => {
-  await devtools.requireLogin({ force });
+.command('login', async ({ print, force = true }) => {
+  await devtools.requireLogin({ print, force });
 })
 .command('preview', async ({ _, path: startPath }) => {
   await devtools.requireLogin();
@@ -50,6 +49,10 @@ program()
   output = output || _[1];
   await devtools.unpack(filename, output);
 })
+.command('qrcode', async ({ type = 'A', ...options }) => {
+  const qrcode = await devtools.qrcode(type, options);
+  console.log('create qrcode:', qrcode);
+})
 .command('help', () => {
   console.log();
   console.log('~$ vxapp <command> [options]');
@@ -61,10 +64,12 @@ program()
   console.log(' - login');
   console.log(' - preview');
   console.log(' - publish');
+  console.log(' - qrcode');
   console.log(' - version');
   console.log(' - help');
 })
 .command('version', () => {
-  console.log('');
+  const pkg = require('../package.json');
+  console.log(pkg.version);
 })
 .parse();

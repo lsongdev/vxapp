@@ -1,12 +1,11 @@
 {
-  "cloud": true,
   "pages":[
     "pages/index/index"
   ],
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarTextStyle":"black",
-    "navigationBarTitleText": "HackPlan",
+    "navigationBarTitleText": "@vxapp/demo",
     "navigationBarBackgroundColor": "#fff"
 
   }

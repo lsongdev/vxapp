@@ -1,11 +1,15 @@
 {
-  "name": "@vxapp/api",
-  "version": "0.0.10",
-  "description": "wechat mini-program api",
+  "name": "@vxapp/demo",
+  "version": "0.0.8",
+  "description": "vxapp demo app",
+  "keywords": [
+    "vxapp",
+    "demo"
+  ],
   "author": "Lsong <song940@gmail.com>",
-  "homepage": "https://github.com/song940/vxapp/tree/master/packages/api#readme",
+  "homepage": "https://github.com/song940/vxapp/tree/master/packages/demo#readme",
   "license": "MIT",
-  "main": "index.js",
+  "main": "src/app.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/song940/vxapp.git"
@@ -15,9 +19,5 @@
   },
   "bugs": {
     "url": "https://github.com/song940/vxapp/issues"
-  },
-  "keywords": [
-    "vxapp",
-    "api"
-  ]
+  }
 }

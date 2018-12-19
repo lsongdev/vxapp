@@ -34,12 +34,12 @@ const wxss = options => {
   const resolve = createResolver(options);
   return atImport(name => {
     const info = resolve(name);
-    wxss.compile(info);
+    wxss.transform(info);
     return `"${info.relative}"`;
   });
 };
 
-wxss.compile = async options => {
+wxss.transform = async options => {
   const { current, source, target, plugins = [] } = options;
   const output = current.replace(source, target);
   const content = await readFile(current);
