@@ -1,0 +1,17 @@
+{
+  "name": "@vxapp/core",
+  "version": "0.0.5",
+  "description": "vxapp core library",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Lsong <song940@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/song940/vxapp/tree/master/packages/core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/song940/vxapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/song940/vxapp/issues"
+  }
+}

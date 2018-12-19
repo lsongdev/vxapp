@@ -1,0 +1,20 @@
+{
+  "name": "vxapp",
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "lsong",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^3.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/song940/vxapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/song940/vxapp/issues"
+  },
+  "homepage": "https://github.com/song940/vxapp#readme"
+}

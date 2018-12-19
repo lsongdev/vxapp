@@ -1,0 +1,24 @@
+{
+  "name": "@vxapp/wxss",
+  "version": "0.0.6",
+  "description": "wechat mini-program wxss parser",
+  "keywords": [
+    "vxapp",
+    "wxss"
+  ],
+  "author": "Lsong <song940@gmail.com>",
+  "homepage": "https://github.com/song940/vxapp/tree/master/packages/wxss#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/song940/vxapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/song940/vxapp/issues"
+  },
+  "dependencies": {
+    "@vxapp/resolve": "^0.0.2",
+    "postcss": "^7.0.6"
+  }
+}

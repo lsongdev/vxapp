@@ -1,0 +1,23 @@
+{
+  "name": "@vxapp/api",
+  "version": "0.0.5",
+  "description": "wechat mini-program api",
+  "author": "Lsong <song940@gmail.com>",
+  "homepage": "https://github.com/song940/vxapp/tree/master/packages/api#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/song940/vxapp.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/song940/vxapp/issues"
+  },
+  "keywords": [
+    "vxapp",
+    "api"
+  ]
+}

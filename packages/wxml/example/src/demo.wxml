@@ -1,0 +1,11 @@
+<import src="./item.wxml" />
+<template is="item" data="{{text: 'forbar'}}"></template>
+<view class="login">
+  <text class="h1 title center">login</text>
+  <form bindsubmit="onLogin">
+    <input name="username" type="text" placeholder="username"></input>
+    <input name="password" type="password" placeholder="password"></input>
+    <button type="primary" formType="submit">login</button>
+  </form>
+  <navigator class="join">join us?</navigator>
+</view>

@@ -1,0 +1,5 @@
+@import "common.wxss";
+
+.middle-p {
+  padding:15px;
+}

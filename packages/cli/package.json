@@ -1,0 +1,34 @@
+{
+  "name": "@vxapp/cli",
+  "version": "0.0.7",
+  "description": "the command line tool for vxapp",
+  "author": "Lsong <song940@gmail.com>",
+  "homepage": "https://github.com/song940/vxapp/tree/master/packages/cli#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "bin": {
+    "vxapp": "./bin/vxapp.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/song940/vxapp.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/song940/vxapp/issues"
+  },
+  "dependencies": {
+    "@vxapp/wxjs": "^0.0.7",
+    "@vxapp/wxml": "^0.0.7",
+    "@vxapp/wxss": "^0.0.6",
+    "fs-extra": "^7.0.1",
+    "wechat-lite": "^3.1.12"
+  },
+  "keywords": [
+    "vxapp",
+    "cli"
+  ],
+  "gitHead": "f768499d103b04b5cf2bb4ab65b1743406524543"
+}

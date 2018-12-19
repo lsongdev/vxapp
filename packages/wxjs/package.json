@@ -1,0 +1,25 @@
+{
+  "name": "@vxapp/wxjs",
+  "version": "0.0.7",
+  "description": "wechat mini-program javascript parser",
+  "author": "Lsong <song940@gmail.com>",
+  "homepage": "https://github.com/song940/vxapp/tree/master/packages/wxjs#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/song940/vxapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/song940/vxapp/issues"
+  },
+  "keywords": [
+    "vxapp",
+    "wxjs"
+  ],
+  "dependencies": {
+    "@babel/core": "^7.2.0",
+    "@vxapp/resolve": "^0.0.2"
+  },
+  "gitHead": "f768499d103b04b5cf2bb4ab65b1743406524543"
+}

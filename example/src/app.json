@@ -1,0 +1,13 @@
+{
+  "cloud": true,
+  "pages":[
+    "pages/index/index"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarTextStyle":"black",
+    "navigationBarTitleText": "HackPlan",
+    "navigationBarBackgroundColor": "#fff"
+
+  }
+}
