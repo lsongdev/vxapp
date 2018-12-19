@@ -1,3 +1,7 @@
 const wxml = require('..');
 
-wxml()(__dirname + '/demo.wxml');
+wxml.compile({
+  current: __dirname + '/src/demo.wxml',
+  source: __dirname + '/src',
+  target: __dirname + '/dist'
+});
