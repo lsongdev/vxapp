@@ -31,7 +31,9 @@ const atImport = rewriter => {
 };
 
 const wxss = options => {
-  const resolve = createResolver(options);
+  const resolve = createResolver(Object.assign({
+    extensions: [ '.wxss', '' ]
+  }, options));
   return atImport(name => {
     const info = resolve(name);
     wxss.transform(info);
@@ -40,8 +42,8 @@ const wxss = options => {
 };
 
 wxss.transform = async options => {
-  const { current, source, target, plugins = [] } = options;
-  const output = current.replace(source, target);
+  var { current, source, target, output, plugins = [] } = options;
+  output = output || current.replace(source, target);
   const content = await readFile(current);
   const parse = postcss(plugins.concat(wxss(options)));
   const result = parse.process(content, { from: current, to: output });

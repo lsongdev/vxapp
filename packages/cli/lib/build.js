@@ -7,8 +7,6 @@ const wxss = require('@vxapp/wxss');
 const wxjs = require('@vxapp/wxjs');
 
 const root = process.cwd();
-const mkdir = promisify(fs.mkdir);
-const exists = promisify(fs.exists);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const readJSONFile = (filename, encoding = 'utf8') => 
@@ -20,37 +18,31 @@ const writeJSONFile = async (filename, page) => {
   return writeFile(filename, JSON.stringify(page));
 };
 
-const ensureDir = async dir => {
+const ensureDir = dir => {
   const paths = [];
   dir.split(path.sep).reduce((prev, cur) => {
     const result = path.join(prev, cur);
     paths.push(result);
+    try{
+      fs.mkdirSync(result);
+    }catch(e){
+      // console.log(e.code, result);
+    }
     return result;
   }, path.sep);
-  for(const cur of paths){
-    const isExists = await exists(cur);
-    !isExists && await mkdir(cur);
-  }
 };
 
 const createParser = src => {
   return async name => {
-    const result = {
-      get js(){
-        return path.resolve(src, `${name}.js`);
-      },
-      get json(){
-        return path.resolve(src, `${name}.json`);
-      },
-      get wxss(){
-        return path.resolve(src, `${name}.wxss`);
-      },
-      get wxml(){
-        return path.resolve(src, `${name}.wxml`);
-      }
-    };
-    const config = await readJSONFile(result.json);
-    return Object.assign(result, config);
+    const json =  path.resolve(src, `${name}.json`);
+    const config = await readJSONFile(json);
+    const def = (prop, value) => 
+      Object.defineProperty(config, prop, { value });
+    def('json', json);
+    def('js', path.resolve(src, `${name}.js`));
+    def('wxml', path.resolve(src, `${name}.wxml`));
+    def('wxss', path.resolve(src, `${name}.wxss`));
+    return config;
   };
 };
 

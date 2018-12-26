@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "main": "index.js",
-  "keywords": [],
+  "keywords": ["vxapp"],
   "author": "lsong",
   "license": "MIT",
   "devDependencies": {
@@ -16,5 +16,7 @@
   "bugs": {
     "url": "https://github.com/song940/vxapp/issues"
   },
-  "homepage": "https://github.com/song940/vxapp#readme"
+  "homepage": "https://github.com/song940/vxapp#readme",
+  "description": "wechat mini-program framework",
+  "dependencies": {}
 }

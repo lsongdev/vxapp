@@ -1,1 +1,3 @@
-<view>hello world</view>
+<view class="app" >
+  Hello World
+</view>

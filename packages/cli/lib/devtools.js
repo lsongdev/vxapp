@@ -79,8 +79,8 @@ const getCode = ({ print }) => new Promise((resolve, reject) => {
   });
 });
 
-devtools.pack = project => MINA.pack(project);
-devtools.unpack = (project, to) => MINA.unpack(project, to);
+devtools.pack = project => WeChat.MINA.pack(project);
+devtools.unpack = (project, to) => WeChat.MINA.unpack(project, to);
 devtools.requireLogin = async ({ print, force } = {}) => {
   const session = await restore();
   if(!force && session){
