@@ -56,18 +56,19 @@ const getAppId = () => {
 };
 
 const run = promisify(exec);
-const open = link => run(`open ${link} &`);
+const open = link => run(`open ${link}`);
 
 const getCode = ({ print }) => new Promise((resolve, reject) => {
   devtools.qrconnect({
-    redirect_uri: 'https://mp.weixin.qq.com/xxx'
+    redirect_uri: 'https://mp.weixin.qq.com/vxapp'
   }, async (err, res) => {
     if(err) return reject(err);
     const { state, qrcode, code } = res;
     switch(state){
       case 0:
+        console.log('[@vxapp/cli] scan qrcode in web browser');
         if(print){
-          console.log('qrcode:', qrcode);
+          console.log('[@vxapp/cli] qrcode:', qrcode);
         }else{
           open(qrcode);
         }

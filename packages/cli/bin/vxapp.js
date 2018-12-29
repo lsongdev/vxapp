@@ -19,18 +19,25 @@ program()
 .command('login', async ({ print, force = true }) => {
   await devtools.requireLogin({ print, force });
 })
-.command('preview', async ({ _, path: startPath }) => {
+.command('preview', async ({ _, path: startPath, print }) => {
   await devtools.requireLogin();
   const project = _[0] || './dist';
   const package = devtools.pack(project);
   const result = await devtools.preview(package, startPath);
-  console.log('[@vxapp/cli] preview:', result.baseresponse);
+  const { errcode, errmsg } = result.baseresponse;
+  console.log('[@vxapp/cli] preview:', errmsg);
+  if(errcode !== 0) return;
   const qrcode = Buffer.from(result.qrcode_img, 'base64');
-  const now = Date.now();
-  const random = Math.random();
-  const filename = path.join('/tmp', `vxapp-${now}-${random}.png`);
-  fs.writeFile(filename, qrcode, () => {
-    console.log('[@vxapp/cli] preview:', filename);
+  const filename = typeof print === 'string' ?
+    print : path.join('/tmp', `vxapp-${Date.now()}-${Math.random()}.png`);
+  fs.writeFile(filename, qrcode, err => {
+    if(err) return console.log('[@vxapp/cli] preview:', err.message);
+    if(print){
+      console.log('[@vxapp/cli] preview:', filename);
+    }else{
+      const { exec } = require('child_process');
+      exec(`open ${filename}`);
+    }
   });
 })
 .command('publish', async ({ _, version, message }) => {
@@ -38,7 +45,13 @@ program()
   const project = _[0] || './dist';
   const package = devtools.pack(project);
   const result = await devtools.publish(package, version, message);
-  console.log('[@vxapp/cli] publish:', result);
+  const { errcode, errmsg } = result.baseresponse;
+  console.log('[@vxapp/cli] publish:', errmsg);
+  if(errcode === 0){
+    console.log('[@vxapp/cli] package size:', result.wxpkg_size);
+  }else{
+    console.log('[@vxapp/cli] publish:', result.compile_err_msg);
+  }
 })
 .command('pack', async ({ _, filename }) => {
   const project = _[0] || './dist';
