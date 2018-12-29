@@ -1,6 +1,6 @@
 {
   "name": "@vxapp/resolve",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "resolve npm modules",
   "keywords": [
     "vxapp",
@@ -11,22 +11,11 @@
   "homepage": "https://github.com/song940/vxapp/tree/master/packages/resolve#readme",
   "license": "MIT",
   "main": "index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/song940/vxapp.git"
   },
-  "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
-  },
   "bugs": {
     "url": "https://github.com/song940/vxapp/issues"
-  },
-  "gitHead": "f768499d103b04b5cf2bb4ab65b1743406524543"
+  }
 }

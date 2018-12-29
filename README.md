@@ -1,3 +1,8 @@
+
+<a href="https://vxapp.github.io">
+  <img src="https://avatars0.githubusercontent.com/u/46240904?s=82" alt="vxapp logo" title="wechat mini-program framework" align="right" />
+</a>
+
 ## vxapp project
 
 > wechat mini-program framework

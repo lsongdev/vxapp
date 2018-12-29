@@ -10,7 +10,9 @@ const ensureDir = dir => {
   dir.split(path.sep).reduce((prev, cur) => {
     const result = path.join(prev, cur);
     paths.push(result);
-    fs.mkdirSync(result);
+    try{
+      fs.mkdirSync(result);
+    }catch(e){}
     return result;
   }, path.sep);
 };

@@ -4,22 +4,19 @@ const { promisify } = require('util');
 const babel = require('@babel/core');
 const createResolver = require('@vxapp/resolve');
 
-const mkdir = promisify(fs.mkdir);
-const exists = promisify(fs.exists);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-const ensureDir = async dir => {
+const ensureDir = dir => {
   const paths = [];
   dir.split(path.sep).reduce((prev, cur) => {
     const result = path.join(prev, cur);
     paths.push(result);
+    try{
+      fs.mkdirSync(result);
+    }catch(e){}
     return result;
   }, path.sep);
-  for(const cur of paths){
-    const isExists = await exists(cur);
-    !isExists && await mkdir(cur);
-  }
 };
 
 const moduelResolver = rewriter => {

@@ -78,6 +78,7 @@ const createResolver = ({ source, target, current, extensions }) => {
   const filename = current.replace(source, target);
   return name => {
     const ref = resolve(name, { basedir, extensions });
+    if(!ref) throw new Error(`[@vxapp/resolve] can not found module: "${name}" `);
     var output = ref.replace(source, target);
     if(~ref.indexOf('node_modules')){
       const dir = getModulePath(ref);
