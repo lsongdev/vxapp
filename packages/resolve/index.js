@@ -17,7 +17,7 @@ const relative = (from, to) => {
   const c = path.relative(a, b);
   const d = path.basename(to);
   const e = path.join(c, d);
-  return e;
+  return e.indexOf('.') === 0 ? e : `./${e}`;
 };
 
 const getPaths = dir => {
@@ -73,19 +73,24 @@ const resolve = (id,  options = {}) => {
   }
 };
 
+const getOutputFileName = (filename, { source, target }) => {
+  var output = filename.replace(source, target);
+  if(~filename.indexOf('node_modules')){
+    const dir = getModulePath(filename);
+    const pkg = require(path.join(dir, 'package.json'));
+    const npm = path.join(target, 'npm', `${pkg.name}-${pkg.version}`);
+    output = filename.replace(dir, npm);
+  }
+  return output;
+};
+
 const createResolver = ({ source, target, current, extensions }) => {
   const basedir = path.dirname(current);
-  const filename = current.replace(source, target);
+  const filename = getOutputFileName(current, { source, target });
   return name => {
     const ref = resolve(name, { basedir, extensions });
     if(!ref) throw new Error(`[@vxapp/resolve] can not found module: "${name}" `);
-    var output = ref.replace(source, target);
-    if(~ref.indexOf('node_modules')){
-      const dir = getModulePath(ref);
-      const pkg = require(path.join(dir, 'package.json'));
-      const npm = path.join(target, 'npm', `${pkg.name}-${pkg.version}`);
-      output = ref.replace(dir, npm);
-    }
+    const output = getOutputFileName(ref, { source, target });
     return {
       source,
       target,
