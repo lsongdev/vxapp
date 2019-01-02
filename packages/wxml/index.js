@@ -23,6 +23,14 @@ const moduleResolver = rewriter => {
       import(node){
         const name = node.attributes.src;
         node.attributes.src = rewriter(name);
+      },
+      include(node){
+        const name = node.attributes.src;
+        node.attributes.src = rewriter(name);
+      },
+      image(node){
+        const name = node.attributes.src;
+        node.attributes.src = rewriter(name);
       }
     }
   };
@@ -44,7 +52,7 @@ wxml.transform = async options => {
   var { current, source, target, output } = options;
   output = output || current.replace(source, target);
   const result = await xml.transformFile(current, {
-    selfClosed: [ 'image', 'import' ],
+    selfClosed: [ 'image', 'import', 'include' ],
     plugins: [ wxml(options) ]
   });
   await ensureDir(path.dirname(output));
