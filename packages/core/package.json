@@ -1,6 +1,6 @@
 {
   "name": "@vxapp/core",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "vxapp core library",
   "main": "index.js",
   "keywords": [],

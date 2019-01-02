@@ -1,6 +1,6 @@
 {
   "name": "@vxapp/wxss",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "wechat mini-program wxss parser",
   "keywords": [
     "vxapp",
@@ -18,7 +18,7 @@
     "url": "https://github.com/song940/vxapp/issues"
   },
   "dependencies": {
-    "@vxapp/resolve": "^0.0.11",
+    "@vxapp/resolve": "^0.0.12",
     "postcss": "^7.0.6"
   }
 }
