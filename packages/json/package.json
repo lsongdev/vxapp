@@ -1,17 +1,17 @@
 {
-  "name": "@vxapp/wxml",
-  "version": "0.0.19",
-  "description": "wechat mini-program wxml parser",
+  "name": "@vxapp/json",
+  "version": "0.0.1",
+  "description": "wechat mini-program json parser",
   "author": "Lsong <song940@gmail.com>",
-  "homepage": "https://github.com/song940/vxapp/tree/master/packages/wxml#readme",
+  "homepage": "https://github.com/song940/vxapp/tree/master/packages/json#readme",
   "license": "MIT",
   "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/song940/vxapp.git"
-  },
-  "bin": {
-    "wxml": "./bin/wxml.js"
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
@@ -19,12 +19,7 @@
   "bugs": {
     "url": "https://github.com/song940/vxapp/issues"
   },
-  "keywords": [
-    "vxapp",
-    "wxml"
-  ],
   "dependencies": {
-    "@vxapp/resolve": "^0.0.12",
-    "xml2": "0.0.7"
+    "@vxapp/resolve": "^0.0.12"
   }
 }
