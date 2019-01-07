@@ -1,6 +1,6 @@
 {
   "name": "@vxapp/json",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "wechat mini-program json parser",
   "author": "Lsong <song940@gmail.com>",
   "homepage": "https://github.com/song940/vxapp/tree/master/packages/json#readme",
