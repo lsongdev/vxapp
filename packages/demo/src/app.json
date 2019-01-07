@@ -1,12 +1,9 @@
 {
-  "pages":[
-    "pages/index/index"
-  ],
-  "window":{
-    "backgroundTextStyle":"light",
-    "navigationBarTextStyle":"black",
+  "pages": ["pages/index/index"],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarTextStyle": "black",
     "navigationBarTitleText": "@vxapp/demo",
     "navigationBarBackgroundColor": "#fff"
-
   }
 }

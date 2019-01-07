@@ -1,66 +1,40 @@
 const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
 
 const wxml = require('@vxapp/wxml');
 const wxss = require('@vxapp/wxss');
 const wxjs = require('@vxapp/wxjs');
+const json = require('@vxapp/json');
 
 const root = process.cwd();
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-const readJSONFile = (filename, encoding = 'utf8') => 
-  readFile(filename, encoding).then(JSON.parse);
+const exists = fs.existsSync;
 
-const writeJSONFile = async (filename, page) => {
-  await ensureDir(path.dirname(filename));
-  console.log('[@vxapp/json] write file:', filename);
-  return writeFile(filename, JSON.stringify(page));
-};
-
-const ensureDir = dir => {
-  const paths = [];
-  dir.split(path.sep).reduce((prev, cur) => {
-    const result = path.join(prev, cur);
-    paths.push(result);
-    try{
-      fs.mkdirSync(result);
-    }catch(e){
-      // console.log(e.code, result);
-    }
-    return result;
-  }, path.sep);
-};
-
-const createParser = src => {
-  return async name => {
-    const json =  path.resolve(src, `${name}.json`);
-    const config = await readJSONFile(json);
-    const def = (prop, value) => 
-      Object.defineProperty(config, prop, { value });
-    def('json', json);
-    def('js', path.resolve(src, `${name}.js`));
-    def('wxml', path.resolve(src, `${name}.wxml`));
-    def('wxss', path.resolve(src, `${name}.wxss`));
-    return config;
+const createTransformer = options => {
+  const f = current => Object.assign({ current }, options);
+  const transform = async (entry, { app = false } = {}) => {
+    if(exists(entry.wxss))
+      await wxss.transform(f(entry.wxss));
+    if(exists(entry.json))
+      await json.transform(f(entry.json));
+    if(app === false)
+      await wxml.transform(f(entry.wxml));
+    return wxjs.transform(f(entry.js));
   };
+  return transform;
 };
 
 const build = async (source = 'src', target = 'dist') => {
   source = path.resolve(root, source);
   target = path.resolve(root, target);
   const options = { source, target };
-  const parse = createParser(source);
+  const parse = json.createParser(source);
+  const transform = createTransformer(options);
   const app = await parse('app');
-  app.pages.forEach(async entry => {
+  for(const entry of app.pages){
     const page = await parse(entry);
-    await wxjs.transform(Object.assign({ current: page.js }, options));
-    await wxml.transform(Object.assign({ current: page.wxml }, options));
-    await wxss.transform(Object.assign({ current: page.wxss }, options));
-    writeJSONFile(path.join(target, `${entry}.json`), page);
-  });
-  await writeJSONFile(path.join(target, `app.json`), app);
-  await wxjs.transform(Object.assign({ current: app.js }, options));
+    transform(page);
+  }
+  return transform(app, { app: true });
 };
 
 module.exports = build;

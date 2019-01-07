@@ -20,6 +20,7 @@
     "url": "https://github.com/song940/vxapp/issues"
   },
   "dependencies": {
+    "@vxapp/json": "^0.0.0",
     "@vxapp/wxjs": "^0.0.18",
     "@vxapp/wxml": "^0.0.18",
     "@vxapp/wxss": "^0.0.17",
